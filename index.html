@@ -1,0 +1,3405 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آکادمی ترمینال لینوکس | آموزش کامل، تعاملی و حرفه‌ای</title>
+<meta name="description" content="آموزش کامل ترمینال لینوکس به زبان فارسی همراه با ترمینال شبیه‌سازی‌شده، تمرین تعاملی بعد از هر فصل و آزمون نهایی">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a0f1c'/%3E%3Cpath d='M22 32 L44 50 L22 68' stroke='%232dd4a7' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M52 68 H78' stroke='%2338bdf8' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+/* ============ Design System ============ */
+:root{
+  --bg:#060a13;
+  --panel:#0c1424;
+  --card:#0f1a2e;
+  --card2:#111d33;
+  --line:rgba(148,163,184,.14);
+  --line2:rgba(148,163,184,.24);
+  --txt:#e6edf3;
+  --soft:#c3cedd;
+  --mut:#8b98ab;
+  --grn:#2dd4a7;
+  --grn2:#4ade80;
+  --cyn:#38bdf8;
+  --vio:#a78bfa;
+  --amb:#fbbf24;
+  --red:#fb7185;
+  --grad:linear-gradient(135deg,#2dd4a7,#38bdf8);
+  --grad2:linear-gradient(135deg,#a78bfa,#38bdf8);
+  --mono:'JetBrains Mono',Consolas,'Courier New',monospace;
+  --shadow:0 24px 70px -24px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:Vazirmatn,'Segoe UI',Tahoma,sans-serif;
+  background:var(--bg);color:var(--txt);
+  font-size:15.5px;line-height:1.95;
+  padding-top:64px;overflow-x:hidden;
+}
+::selection{background:rgba(45,212,167,.35);color:#fff}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22);border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:rgba(45,212,167,.45)}
+a{color:var(--cyn);text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 22px}
+.hidden{display:none!important}
+.ltr{direction:ltr!important;text-align:left!important}
+kbd{
+  background:#0a0f1c;border:1px solid var(--line2);border-bottom-width:2px;
+  padding:2px 9px;border-radius:7px;font-family:var(--mono);font-size:11.5px;color:var(--soft);
+}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:4px 14px;border-radius:999px;
+  border:1px solid var(--line);font-size:12.5px;color:var(--mut);background:rgba(255,255,255,.02)}
+.chip b{color:var(--grn)}
+/* ============ Background FX ============ */
+.bg-fx{position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(640px at 88% -6%, rgba(45,212,167,.13), transparent 62%),
+    radial-gradient(760px at -12% 32%, rgba(56,189,248,.10), transparent 62%),
+    radial-gradient(780px at 52% 112%, rgba(167,139,250,.11), transparent 62%),
+    var(--bg);
+}
+.bg-fx::after{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(ellipse 95% 72% at 50% 0%,#000 25%,transparent 78%);
+  mask-image:radial-gradient(ellipse 95% 72% at 50% 0%,#000 25%,transparent 78%);
+}
+/* ============ Topbar ============ */
+#topbar{position:fixed;top:0;right:0;left:0;height:64px;z-index:80;
+  background:rgba(6,10,19,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line)}
+#topbar .wrap{height:100%;display:flex;align-items:center;gap:22px}
+.logo{display:flex;align-items:center;gap:11px;color:var(--txt);cursor:pointer;font-weight:800;font-size:17px;white-space:nowrap}
+.logo svg{width:32px;height:32px;flex:none;filter:drop-shadow(0 0 10px rgba(45,212,167,.5))}
+.logo b{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#mainnav{display:flex;gap:4px;flex:1}
+#mainnav a{padding:8px 15px;border-radius:11px;color:var(--mut);font-size:14px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
+#mainnav a:hover{color:var(--txt);background:rgba(148,163,184,.09)}
+#mainnav a.active{color:var(--txt);background:rgba(45,212,167,.12);box-shadow:inset 0 0 0 1px rgba(45,212,167,.3)}
+.top-tools{display:flex;align-items:center;gap:12px}
+.progress-chip{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mut)}
+.pbar{width:150px;height:8px;border-radius:99px;background:rgba(148,163,184,.14);overflow:hidden}
+.pbar i{display:block;height:100%;width:0%;background:var(--grad);border-radius:99px;transition:width .6s cubic-bezier(.22,1,.36,1)}
+#ptext{font-family:var(--mono);font-size:11.5px;min-width:38px}
+.icon-btn{width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:transparent;color:var(--mut);
+  font-size:16px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.icon-btn:hover{color:var(--amb);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.07)}
+/* ============ Buttons ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 26px;border-radius:13px;
+  font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;border:none;transition:.22s;white-space:nowrap}
+.btn-primary{background:var(--grad);color:#04141f;box-shadow:0 12px 34px -12px rgba(45,212,167,.55)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 44px -12px rgba(45,212,167,.65)}
+.btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--line2)}
+.btn-ghost:hover{border-color:rgba(45,212,167,.5);background:rgba(45,212,167,.07)}
+.btn-danger{background:rgba(251,113,133,.12);color:var(--red);border:1px solid rgba(251,113,133,.35)}
+.btn-sm{padding:8px 16px;font-size:13px;border-radius:10px}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+/* ============ Views ============ */
+.view{display:none;animation:fadeUp .45s cubic-bezier(.22,1,.36,1)}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+/* ============ Hero ============ */
+.hero{padding:58px 0 74px}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:52px;align-items:center}
+.hero-badge{margin-bottom:20px}
+h1.hero-title{font-size:clamp(30px,4.4vw,52px);font-weight:900;line-height:1.5;letter-spacing:-.5px}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-lead{color:var(--mut);font-size:16.5px;max-width:560px;margin-top:18px}
+.hero-cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.hero-feats{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+.stats{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 22px;min-width:118px;transition:.25s}
+.stat:hover{transform:translateY(-4px);border-color:rgba(45,212,167,.4)}
+.stat b{display:block;font-size:27px;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-family:var(--mono)}
+.stat span{font-size:12.5px;color:var(--mut)}
+/* ============ Terminal Window ============ */
+.termwin{
+  background:#0a0f1c;border:1px solid rgba(45,212,167,.28);border-radius:16px;overflow:hidden;
+  box-shadow:var(--shadow),0 0 70px -32px rgba(45,212,167,.4);direction:ltr;
+}
+.term-head{display:flex;align-items:center;gap:8px;padding:12px 15px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line)}
+.tdot{width:12px;height:12px;border-radius:50%}
+.tdot.r{background:#ff5f57}.tdot.y{background:#febc2e}.tdot.g{background:#28c840}
+.term-title{flex:1;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--mut);padding-inline-end:52px}
+.term-body{padding:16px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.85;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.term-body .tl{direction:ltr;text-align:left}
+.t-err{color:var(--red)}
+.t-ok{color:var(--grn2)}
+.t-info{color:var(--cyn)}
+.t-dim{color:var(--mut)}
+.t-mark{background:rgba(45,212,167,.32);color:#d9fff3;border-radius:3px;padding:0 2px}
+.p-user{color:var(--grn);font-weight:700}
+.p-at{color:var(--mut)}
+.p-host{color:var(--cyn);font-weight:700}
+.p-sep{color:var(--mut)}
+.p-path{color:var(--vio);font-weight:600}
+.p-end{color:var(--soft)}
+.term-input-row{display:flex;align-items:center;gap:9px;padding:12px 18px;border-top:1px solid var(--line);background:rgba(255,255,255,.02)}
+.term-input-row .prompt{flex:none;white-space:nowrap}
+#term-input{flex:1;min-width:60px;background:transparent;border:none;outline:none;color:var(--txt);font-family:var(--mono);font-size:13.5px;caret-color:var(--grn)}
+.term-hint{padding:8px 18px 12px;font-family:var(--mono);font-size:11px;color:var(--mut);direction:ltr;text-align:left;border-top:1px dashed var(--line)}
+.term-hint b{color:var(--grn)}
+/* hero preview anim caret */
+.tcaret{display:inline-block;width:8px;height:16px;background:var(--grn);vertical-align:-3px;animation:blink 1s steps(1) infinite;border-radius:2px}
+@keyframes blink{50%{opacity:0}}
+/* ============ Toast ============ */
+#toasts{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast{background:#0f1a2e;border:1px solid rgba(45,212,167,.45);color:var(--txt);padding:11px 22px;border-radius:13px;
+  font-size:13.5px;box-shadow:var(--shadow);animation:toastIn .35s cubic-bezier(.22,1,.36,1);max-width:min(90vw,520px);text-align:center}
+.toast.warn{border-color:rgba(251,191,36,.5)}
+.toast.err{border-color:rgba(251,113,133,.5)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-14px) scale(.95)}to{opacity:1;transform:none}}
+.toast.out{animation:toastOut .3s forwards}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px)}}
+/* ============ Section title ============ */
+.sec-title{text-align:center;padding:44px 0 8px}
+.sec-title h2{font-size:clamp(24px,3vw,34px);font-weight:900}
+.sec-title p{color:var(--mut);margin-top:8px;font-size:14.5px}
+</style>
+<style>
+/* ============ Course Layout ============ */
+.course-layout{display:grid;grid-template-columns:288px 1fr;gap:30px;align-items:start;padding:30px 0 40px}
+#sidebar{position:sticky;top:84px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;max-height:calc(100vh - 116px);overflow-y:auto}
+.sb-head{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.sb-head b{font-size:14.5px}
+.sb-head span{font-family:var(--mono);font-size:11px;color:var(--mut)}
+.sb-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:13px;cursor:pointer;color:var(--mut);transition:.18s;border:1px solid transparent;margin-bottom:3px}
+.sb-item:hover{color:var(--txt);background:rgba(148,163,184,.07)}
+.sb-item.active{color:var(--txt);background:linear-gradient(90deg,rgba(45,212,167,.13),rgba(56,189,248,.05));border-color:rgba(45,212,167,.3)}
+.sb-num{width:34px;height:34px;flex:none;border-radius:11px;background:rgba(148,163,184,.1);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12.5px;font-weight:700}
+.sb-item.active .sb-num{background:var(--grad);color:#04141f}
+.sb-tt{flex:1;font-size:13.5px;font-weight:600;line-height:1.5}
+.sb-status{flex:none;font-size:14px;width:22px;text-align:center}
+.sb-item.done .sb-status{color:var(--grn)}
+.sb-item.done .sb-num{background:rgba(45,212,167,.16);color:var(--grn)}
+/* ============ Chapter Content ============ */
+.ch-head{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px;overflow:hidden}
+.ch-head::before{content:'';position:absolute;inset-inline-start:-60px;top:-80px;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(45,212,167,.14),transparent 70%);pointer-events:none}
+.ch-crumb{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.ch-icon{width:52px;height:52px;font-size:26px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:15px}
+.ch-head h2{font-size:clamp(21px,2.6vw,29px);font-weight:900;line-height:1.5}
+.ch-sub{color:var(--mut);margin-top:10px;font-size:14.5px}
+.ch-body{margin-top:6px}
+.sec h3{margin:34px 0 12px;padding-inline-start:14px;border-inline-start:3px solid var(--grn);font-size:18.5px;font-weight:800}
+.sec p{color:var(--soft);margin-bottom:10px;text-align:start}
+.sec p b{color:var(--txt)}
+.codeblock{direction:ltr;text-align:left;background:#0a0f1c;border:1px solid var(--line);border-radius:13px;
+  padding:14px 17px;font-family:var(--mono);font-size:12.8px;line-height:1.9;color:#8ee7c5;overflow-x:auto;margin:14px 0;white-space:pre}
+.codeblock .cm{color:var(--mut)}
+.codeblock .o{color:var(--cyn)}
+.cmd-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:22px}
+.cmd-card h4{font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cmd-card h4::before{content:'⌘';color:var(--grn);font-size:18px}
+.cmd-grid{display:grid;gap:9px}
+.cmd-row{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:rgba(255,255,255,.02);
+  border:1px solid var(--line);padding:9px 13px;border-radius:12px;transition:.18s}
+.cmd-row:hover{border-color:rgba(45,212,167,.4);transform:translateX(-3px)}
+.cmd-row code{font-family:var(--mono);font-size:12.6px;color:#7ee7c0;direction:ltr;background:#0a0f1c;padding:5px 11px;border-radius:8px;border:1px solid var(--line);white-space:nowrap}
+.cmd-d{color:var(--mut);font-size:13.2px}
+.cmd-run{background:rgba(45,212,167,.1);border:1px solid rgba(45,212,167,.3);color:var(--grn);border-radius:9px;
+  padding:5px 13px;font-size:12px;font-family:inherit;cursor:pointer;transition:.2s;white-space:nowrap;font-weight:700}
+.cmd-run:hover{background:var(--grad);color:#04141f}
+.callout{padding:15px 18px;border-radius:14px;border:1px solid;margin:18px 0;font-size:14px;line-height:1.9}
+.callout.tip{border-color:rgba(45,212,167,.35);background:rgba(45,212,167,.07)}
+.callout.warn{border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.07)}
+.callout b{display:inline-flex;align-items:center;gap:7px;margin-inline-end:6px}
+.callout.tip b{color:var(--grn)}
+.callout.warn b{color:var(--amb)}
+/* ============ Tasks ============ */
+.tasks-card{background:linear-gradient(180deg,rgba(45,212,167,.06),transparent),var(--card);border:1px solid rgba(45,212,167,.25);
+  border-radius:20px;padding:24px;margin-top:26px}
+.tasks-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.tasks-head h4{display:flex;align-items:center;gap:10px;font-size:16.5px}
+.tasks-head h4 span{font-family:var(--mono);font-size:12px;color:var(--grn);background:rgba(45,212,167,.12);
+  border:1px solid rgba(45,212,167,.3);padding:2px 11px;border-radius:99px}
+.task{display:flex;gap:13px;align-items:flex-start;padding:11px 8px;border-bottom:1px dashed var(--line)}
+.task:last-child{border-bottom:none}
+.chk{width:23px;height:23px;flex:none;border:2px solid var(--mut);border-radius:8px;margin-top:4px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:.25s}
+.task.done .chk{background:var(--grad);border-color:transparent;color:#04141f;font-weight:900;transform:scale(1.05)}
+.t-desc{font-size:14.2px;color:var(--soft)}
+.task.done .t-desc{color:var(--mut);text-decoration:line-through;text-decoration-color:rgba(45,212,167,.5)}
+.ch-nav{display:flex;justify-content:space-between;gap:14px;margin:28px 0 60px}
+/* ============ Terminal Drawer ============ */
+#term-drawer{position:fixed;bottom:0;right:0;left:0;z-index:60;height:min(62vh,580px);
+  transform:translateY(calc(100% - 47px));transition:transform .38s cubic-bezier(.22,1,.36,1);
+  background:rgba(9,14,26,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid rgba(45,212,167,.35);border-radius:22px 22px 0 0;
+  box-shadow:0 -20px 70px -20px rgba(0,0,0,.6)}
+#term-drawer.open{transform:none}
+#drawer-handle{position:absolute;top:0;right:0;left:0;height:47px;display:flex;align-items:center;justify-content:center;gap:12px;
+  cursor:pointer;background:transparent;border:none;color:var(--mut);font-family:inherit;font-size:13.5px;font-weight:700;z-index:5}
+#drawer-handle:hover{color:var(--grn)}
+#drawer-handle .grip{width:44px;height:5px;border-radius:99px;background:rgba(148,163,184,.3)}
+#drawer-handle .dh-arrow{transition:.3s;font-size:11px}
+#term-drawer.open #drawer-handle .dh-arrow{transform:rotate(180deg)}
+#drawer-body{position:absolute;top:47px;right:0;left:0;bottom:0;display:flex;flex-direction:column;padding:0 14px 14px}
+#drawer-body .termwin{flex:1;display:flex;flex-direction:column;min-height:0}
+#drawer-body .term-body{flex:1;min-height:0}
+/* ============ Terminal full view ============ */
+#view-terminal{padding-top:34px}
+#view-terminal .wrap{padding-bottom:70px}
+#term-full-host{height:calc(100vh - 175px);min-height:470px;display:flex;flex-direction:column}
+#term-full-host .termwin{flex:1;display:flex;flex-direction:column;min-height:0}
+#term-full-host .term-body{flex:1;min-height:0}
+.quick-cmds{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
+.quick-cmds .lbl{font-size:13px;color:var(--mut)}
+.qc{background:var(--card);border:1px solid var(--line);color:#7ee7c0;font-family:var(--mono);font-size:12px;
+  padding:6px 13px;border-radius:9px;cursor:pointer;transition:.2s;direction:ltr}
+.qc:hover{border-color:rgba(45,212,167,.5);background:rgba(45,212,167,.08)}
+/* ============ Exam ============ */
+.exam-intro{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px;max-width:780px;margin:26px auto 60px;text-align:center}
+.exam-intro h2{font-size:26px;margin-bottom:6px}
+.exam-intro .big-ic{font-size:46px;margin-bottom:12px}
+.exam-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:26px 0;text-align:start}
+.rule{background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rule b{display:block;font-size:13.5px;margin-bottom:3px;color:var(--txt)}
+.rule span{font-size:12.5px;color:var(--mut)}
+.exam-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 24px;margin:24px 0 22px;position:sticky;top:78px;z-index:20;backdrop-filter:blur(10px)}
+.exam-head h3{font-size:17px}
+#exam-timer{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--grn);background:rgba(45,212,167,.1);
+  border:1px solid rgba(45,212,167,.3);padding:6px 18px;border-radius:12px;direction:ltr}
+#exam-timer.low{color:var(--red);border-color:rgba(251,113,133,.4);background:rgba(251,113,133,.08);animation:blink 1.2s infinite}
+.exam-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:start;padding-bottom:40px}
+.exam-col h4{font-size:16px;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.exam-col h4 .cnt{font-family:var(--mono);font-size:12px;color:var(--cyn);background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);padding:2px 11px;border-radius:99px}
+.q-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px;margin-bottom:14px}
+.q-num{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:27px;border-radius:9px;
+  background:var(--grad2);color:#fff;font-family:var(--mono);font-size:12.5px;font-weight:700;margin-inline-end:9px}
+.q-text{font-weight:700;font-size:14.5px;display:inline}
+.q-opts{display:grid;gap:9px;margin-top:14px}
+.q-opt{border:1px solid var(--line);background:rgba(255,255,255,.02);padding:10px 15px;border-radius:11px;cursor:pointer;
+  color:var(--soft);font-size:13.8px;font-family:inherit;text-align:start;transition:.18s}
+.q-opt:hover{border-color:var(--line2);color:var(--txt)}
+.q-opt.sel{border-color:var(--grn);color:var(--txt);background:rgba(45,212,167,.09);box-shadow:inset 0 0 0 1px rgba(45,212,167,.35)}
+.q-opt.correct{border-color:#28c840;background:rgba(40,200,64,.12);color:var(--txt)}
+.q-opt.wrong{border-color:var(--red);background:rgba(251,113,133,.1)}
+.q-why{margin-top:12px;font-size:12.8px;color:var(--mut);border-top:1px dashed var(--line);padding-top:10px;display:none}
+.q-why b{color:var(--grn)}
+.exam-submit-bar{display:flex;justify-content:center;gap:14px;padding:10px 0 60px}
+.x-item{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 16px;margin-bottom:10px}
+.x-item .num{flex:none;width:26px;height:26px;border-radius:9px;background:rgba(56,189,248,.12);color:var(--cyn);
+  border:1px solid rgba(56,189,248,.3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;margin-top:2px}
+.x-item.done{border-color:rgba(45,212,167,.4);background:linear-gradient(180deg,rgba(45,212,167,.07),transparent),var(--card)}
+.x-item.done .num{background:var(--grad);color:#04141f;border-color:transparent}
+.x-item p{font-size:13.6px;color:var(--soft)}
+.x-item.done p{color:var(--mut)}
+/* ============ Modal ============ */
+#modal-overlay{position:fixed;inset:0;background:rgba(4,8,16,.72);backdrop-filter:blur(7px);z-index:150;
+  display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeUp .25s}
+.modal{width:min(660px,100%);background:#0d1526;border:1px solid var(--line2);border-radius:20px;padding:28px;
+  max-height:88vh;overflow-y:auto;box-shadow:var(--shadow)}
+.modal h3{font-size:19px;margin-bottom:8px}
+.modal .m-sub{color:var(--mut);font-size:13.5px;margin-bottom:18px}
+.m-input{width:100%;background:#0a0f1c;border:1px solid var(--line2);border-radius:12px;color:var(--txt);
+  font-family:inherit;font-size:14.5px;padding:12px 16px;outline:none;transition:.2s}
+.m-input:focus{border-color:rgba(45,212,167,.55);box-shadow:0 0 0 3px rgba(45,212,167,.12)}
+.m-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+#nano-file{font-family:var(--mono);font-size:12px;color:var(--cyn);background:#0a0f1c;border:1px solid var(--line);
+  border-radius:10px;padding:8px 14px;direction:ltr;text-align:left;margin-bottom:12px}
+#nano-area{width:100%;height:300px;background:#0a0f1c;border:1px solid var(--line2);color:#d8f5e8;
+  font-family:var(--mono);font-size:13px;line-height:1.8;padding:13px;border-radius:12px;direction:ltr;text-align:left;outline:none;resize:vertical}
+#nano-area:focus{border-color:rgba(45,212,167,.5)}
+.m-hint{font-size:12px;color:var(--mut);margin-top:9px}
+/* result */
+.ring-wrap{display:flex;flex-direction:column;align-items:center;margin:8px 0 18px}
+.ring{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.ring::before{content:'';position:absolute;inset:11px;border-radius:50%;background:#0d1526}
+.ring b{position:relative;z-index:1;font-size:34px;font-weight:900;font-family:var(--mono)}
+.ring small{position:relative;z-index:1;color:var(--mut);font-size:11px}
+.r-grade{margin-top:12px;font-size:17px;font-weight:800}
+.r-break{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.r-cell{background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:13px;padding:13px 16px;text-align:center}
+.r-cell b{display:block;font-size:21px;font-family:var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.r-cell span{font-size:12px;color:var(--mut)}
+.r-review{margin-top:6px}
+.r-review h4{font-size:14.5px;margin-bottom:10px;color:var(--amb)}
+.rv-item{background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:12px 15px;margin-bottom:10px;font-size:13px}
+.rv-item .qq{color:var(--txt);font-weight:700;margin-bottom:5px}
+.rv-item .aa{color:var(--mut)}
+.rv-item .aa b{color:var(--grn)}
+/* ============ Footer ============ */
+footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mut);text-align:center;font-size:13px;margin-top:20px}
+footer b{color:var(--grn)}
+/* ============ Confetti ============ */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
+/* ============ Responsive ============ */
+@media (max-width:1020px){
+  .hero-grid{grid-template-columns:1fr;gap:38px}
+  .course-layout{grid-template-columns:1fr}
+  #sidebar{position:static;max-height:none;display:flex;gap:8px;overflow-x:auto;padding:12px;align-items:center}
+  .sb-head{display:none}
+  .sb-item{flex:none;margin:0;flex-direction:column;gap:6px;padding:10px 14px;text-align:center;min-width:118px}
+  .sb-status{position:absolute}
+  .exam-grid{grid-template-columns:1fr}
+}
+@media (max-width:680px){
+  body{font-size:14.5px}
+  .progress-chip{display:none}
+  #mainnav a{padding:7px 10px;font-size:12.5px}
+  .logo span{display:none}
+  .hero{padding:34px 0 50px}
+  .stat{min-width:100px;padding:12px 16px}
+  .cmd-row{grid-template-columns:1fr;gap:7px}
+  .cmd-run{justify-self:start}
+  #term-drawer{height:min(70vh,560px)}
+  .exam-head{top:70px}
+}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+
+<!-- ================= Topbar ================= -->
+<header id="topbar">
+  <div class="wrap">
+    <a class="logo" data-nav="home">
+      <svg viewBox="0 0 100 100" fill="none">
+        <rect width="100" height="100" rx="24" fill="#0a0f1c"/>
+        <rect x="1.5" y="1.5" width="97" height="97" rx="22.5" stroke="url(#lg1)" stroke-width="3"/>
+        <path d="M22 32 L44 50 L22 68" stroke="#2dd4a7" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M52 68 H78" stroke="#38bdf8" stroke-width="9" stroke-linecap="round"/>
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="100" y2="100"><stop stop-color="#2dd4a7"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs>
+      </svg>
+      <span>آکادمی <b>ترمینال</b></span>
+    </a>
+    <nav id="mainnav">
+      <a data-nav="home" class="active">🏠 خانه</a>
+      <a data-nav="course">📚 فصل‌ها</a>
+      <a data-nav="terminal">⌨️ ترمینال</a>
+      <a data-nav="exam">🎯 آزمون نهایی</a>
+    </nav>
+    <div class="top-tools">
+      <div class="progress-chip">
+        <div class="pbar"><i id="pbar-fill"></i></div>
+        <span id="ptext">0%</span>
+      </div>
+      <button id="btn-reset" class="icon-btn" title="بازنشانی پیشرفت">↺</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ================= Home ================= -->
+<section id="view-home" class="view active">
+  <div class="wrap hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge"><span class="chip">🐧 آموزش تعاملی از صفر تا صد &nbsp;·&nbsp; <b>۱۰۰٪ عملی</b></span></div>
+        <h1 class="hero-title">تسلط کامل بر <span class="grad-text">ترمینال لینوکس</span><br>در ۱۳ فصل عملی</h1>
+        <p class="hero-lead">با یک ترمینال واقعیِ شبیه‌سازی‌شده تمرین کنید، بعد از هر فصل تمرین‌های هوشمند را انجام دهید و در پایان با آزمون جامع عملی و تئوری، سطح خود را بسنجید. همه‌چیز در یک فایل — بدون نیاز به نصب لینوکس!</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-nav="course">🚀 شروع یادگیری</button>
+          <button class="btn btn-ghost" id="btn-hero-term">⌨️ باز کردن ترمینال</button>
+        </div>
+        <div class="hero-feats">
+          <span class="chip">✅ ترمینال شبیه‌سازی‌شده واقعی</span>
+          <span class="chip">✅ تصحیح خودکار تمرین‌ها</span>
+          <span class="chip">✅ آزمون نهایی با تایمر</span>
+          <span class="chip">✅ ذخیره پیشرفت</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="stat-ch">13</b><span>فصل آموزشی</span></div>
+          <div class="stat"><b id="stat-cmd">55+</b><span>دستور واقعی</span></div>
+          <div class="stat"><b id="stat-task">60+</b><span>تمرین عملی</span></div>
+          <div class="stat"><b id="stat-exam">25</b><span>سوال آزمون</span></div>
+        </div>
+      </div>
+      <div class="termwin">
+        <div class="term-head">
+          <span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>
+          <span class="term-title">student@linux-academy: ~</span>
+        </div>
+        <div class="term-body" id="hero-term" style="min-height:330px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Course ================= -->
+<section id="view-course" class="view">
+  <div class="wrap course-layout">
+    <aside id="sidebar"></aside>
+    <div id="chapter-view"></div>
+  </div>
+</section>
+
+<!-- ================= Terminal ================= -->
+<section id="view-terminal" class="view">
+  <div class="wrap">
+    <div class="quick-cmds">
+      <span class="lbl">دستورهای سریع:</span>
+      <button class="qc" data-q="help">help</button>
+      <button class="qc" data-q="ls -la">ls -la</button>
+      <button class="qc" data-q="cd ~">cd ~</button>
+      <button class="qc" data-q="cat welcome.txt">cat welcome.txt</button>
+      <button class="qc" data-q="man ls">man ls</button>
+      <button class="qc" data-q="neofetch">neofetch</button>
+      <span class="lbl" style="margin-inline-start:auto">💡 <kbd>Tab</kbd> تکمیل خودکار · <kbd>↑</kbd> تاریخچه · <kbd>Ctrl+L</kbd> پاک‌سازی</span>
+    </div>
+    <div id="term-full-host"></div>
+  </div>
+</section>
+
+<!-- ================= Exam ================= -->
+<section id="view-exam" class="view">
+  <div class="wrap" id="exam-root"></div>
+</section>
+</main>
+
+<!-- ================= Terminal Drawer ================= -->
+<div id="term-drawer">
+  <button id="drawer-handle">
+    <span class="grip"></span>
+    <span>⌨️ ترمینال تمرین — برای باز/بسته کردن کلیک کنید</span>
+    <kbd>Ctrl+`</kbd>
+    <span class="dh-arrow">▼</span>
+  </button>
+  <div id="drawer-body"></div>
+</div>
+
+<!-- ================= The Terminal (moved by JS) ================= -->
+<div id="term-root" class="termwin">
+  <div class="term-head">
+    <span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>
+    <span class="term-title" id="term-title">Linux Academy — Terminal Simulator</span>
+  </div>
+  <div class="term-body" id="term-out"></div>
+  <div class="term-input-row">
+    <span class="prompt" id="term-prompt"></span>
+    <input id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal input">
+  </div>
+  <div class="term-hint">Simulated Linux shell — type <b>help</b> for the command list · <b>man</b> &lt;cmd&gt; for usage</div>
+</div>
+
+<footer>
+  <div class="wrap">
+    آکادمی ترمینال لینوکس — ساخته‌شده با <b>❤</b> برای یادگیری عملی · همه‌ی دستورها در یک شبیه‌ساز امن اجرا می‌شوند؛ سیستم واقعی شما دست‌نخورده می‌ماند.
+  </div>
+</footer>
+
+<div id="toasts"></div>
+<div id="modal-overlay" class="hidden"><div class="modal" id="modal-card"></div></div>
+<canvas id="confetti"></canvas>
+
+<script>
+'use strict';
+/* ============================================================
+   LINUX TERMINAL ACADEMY — Simulation Engine
+   ============================================================ */
+
+/* ---------- Global State ---------- */
+const S = {
+  user: 'student',
+  host: 'linux-academy',
+  home: '/home/student',
+  vars: { PATH: '/usr/local/bin:/usr/bin:/bin', SHELL: '/bin/bash' },
+  history: [],
+  jobs: [],
+  pid: 1420,
+  installed: new Set(['bash','coreutils','nano','curl','wget','git','less','grep']),
+  origUser: 'student',
+  exam: { active: false, answers: {}, start: 0, timer: null, submitted: false }
+};
+
+/* ---------- Virtual File System ---------- */
+class VFS {
+  constructor(){ this.root = null; this.cwd = S.home; this.TAR = {}; this.GZ = {}; }
+  file(c, mode){ return { t:'f', c: c||'', m: mode||'rw-r--r--', o:S.user, g:S.user, mt: Date.now() - Math.floor(Math.random()*9e8) }; }
+  dir(){ return { t:'d', ch:{}, m:'rwxr-xr-x', o:S.user, g:S.user, mt: Date.now() - Math.floor(Math.random()*9e8) }; }
+
+  buildDefault(){
+    const f = (c,m)=>this.file(c,m), d = ()=>this.dir();
+    const root = d();
+    root.o = 'root'; root.g = 'root';
+    root.ch['bin'] = d(); root.ch['bin'].o='root'; root.ch['bin'].ch['bash'] = f('ELF binary','rwxr-xr-x');
+    const usr = d(); usr.o='root'; usr.ch['bin']=d(); usr.ch['bin'].o='root';
+    root.ch['usr'] = usr;
+    const etc = d(); etc.o='root';
+    etc.ch['hostname'] = f(S.host+'\n');
+    etc.ch['hosts'] = f('127.0.0.1\tlocalhost\n127.0.1.1\t'+S.host+'\n');
+    etc.ch['os-release'] = f('PRETTY_NAME="Linux Academy OS 22.04 LTS"\nNAME="Linux Academy OS"\nID=academy\n');
+    etc.ch['passwd'] = f('root:x:0:0:root:/root:/bin/bash\n'+S.user+':x:1000:1000::/'+S.home.slice(1)+':/bin/bash\n');
+    etc.ch['group'] = f('root:x:0:\nsudo:x:27:'+S.user+'\nadm:x:4:'+S.user+'\n'+S.user+':x:1000:\n');
+    root.ch['etc'] = etc;
+    root.ch['var'] = d(); root.ch['var'].o='root'; root.ch['var'].ch['log'] = d(); root.ch['var'].ch['log'].o='root';
+    root.ch['tmp'] = d(); root.ch['tmp'].m = 'rwxrwxrwt'; root.ch['tmp'].o='root';
+    const home = d(); home.o='root';
+    const st = d();
+    st.ch['welcome.txt'] = f(
+'Welcome to the Linux Terminal Academy!\n'+
+'Linux is a family of free and open-source operating systems.\n'+
+'The terminal (shell) is the most powerful tool in Linux.\n'+
+'Practice every day and you will master the Linux command line.\n'+
+'Good luck, and have fun with Linux!\n');
+    const docs = d();
+    docs.ch['report.txt'] = f(
+'Linux System Report - Quarterly Review\n'+
+'=========================================\n'+
+'1. The Linux kernel version 5.15 is running smoothly.\n'+
+'2. Server uptime: 99.98 percent this quarter.\n'+
+'3. All Linux security updates were applied on time.\n'+
+'4. Disk usage on the main Linux server dropped by 12 percent.\n'+
+'5. The development team migrated 8 services to Linux containers.\n'+
+'6. Backup scripts run automatically every night at 2 AM.\n'+
+'7. Recommendation: train more staff on the Linux terminal.\n'+
+'8. Next review date: next quarter.\n');
+    docs.ch['notes.md'] = f(
+'# Meeting Notes\n\n'+
+'## Monday\n'+
+'- Discussed the new Linux deployment plan\n'+
+'- Assigned terminal training to all team members\n\n'+
+'## Wednesday\n'+
+'- Reviewed shell scripting basics\n'+
+'- Decided to automate reports with bash\n\n'+
+'## Friday\n'+
+'- Final test of the Linux build pipeline\n'+
+'- Celebration pizza! (optional)\n');
+    docs.ch['todo.txt'] = f(
+'[x] Learn basic navigation (ls, cd, pwd)\n'+
+'[x] Practice file operations (cp, mv, rm)\n'+
+'[ ] Master grep and find\n'+
+'[ ] Write my first bash script\n'+
+'[ ] Become a Linux wizard\n');
+    st.ch['documents'] = docs;
+    const dl = d();
+    dl.ch['script.sh'] = f('#!/bin/bash\necho "This is a sample script"\ndate\necho "Done."\n', 'rw-r--r--');
+    dl.ch['photo.jpg'] = f('\x89PNG-fake-image-data');
+    dl.ch['backup-old.tar.gz'] = f('binary-archive-data');
+    st.ch['downloads'] = dl;
+    st.ch['pictures'] = d();
+    st.ch['pictures'].ch['vacation.png'] = f('png-data');
+    st.ch['pictures'].ch['team.jpg'] = f('jpg-data');
+    st.ch['music'] = d();
+    const prj = d();
+    const web = d();
+    web.ch['index.html'] = f('<!DOCTYPE html>\n<html>\n<head><title>My Site</title></head>\n<body>\n  <h1>Hello Linux!</h1>\n</body>\n</html>\n');
+    web.ch['style.css'] = f('body {\n  font-family: sans-serif;\n  background: #0a0f1c;\n}\n');
+    prj.ch['website'] = web;
+    const py = d();
+    py.ch['main.py'] = f('#!/usr/bin/env python3\nprint("Hello from Python on Linux!")\n');
+    prj.ch['python'] = py;
+    st.ch['projects'] = prj;
+    st.ch['.bashrc'] = f('# ~/.bashrc\nalias ll="ls -alF"\nexport PS1="\\u@\\h:\\w$ "\n');
+    st.ch['.profile'] = f('# ~/.profile\n');
+    home.ch[S.user] = st;
+    root.ch['home'] = home;
+    this.root = root;
+    this.cwd = S.home;
+  }
+
+  resolve(p){
+    if(p === undefined || p === null || p === '') p = '.';
+    p = String(p);
+    if(p === '~') p = S.home;
+    else if(p.startsWith('~/')) p = S.home + p.slice(1);
+    let parts;
+    if(p.startsWith('/')) parts = p.split('/');
+    else parts = (this.cwd + '/' + p).split('/');
+    const st = [];
+    for(const seg of parts){
+      if(!seg || seg === '.') continue;
+      if(seg === '..'){ st.pop(); continue; }
+      st.push(seg);
+    }
+    return st;
+  }
+  nodeOf(segs){ let n = this.root; for(const s of segs){ if(n.t !== 'd' || !n.ch[s]) return null; n = n.ch[s]; } return n; }
+  getNode(p){ return this.nodeOf(this.resolve(p)); }
+  isDir(p){ const n = this.getNode(p); return !!n && n.t === 'd'; }
+  isFile(p){ const n = this.getNode(p); return !!n && n.t === 'f'; }
+  exists(p){ return !!this.getNode(p); }
+  read(p){ const n = this.getNode(p); return n && n.t === 'f' ? n.c : null; }
+  mode(p){ const n = this.getNode(p); return n ? n.m : null; }
+  parentSegs(p){ const s = this.resolve(p); return s.slice(0, -1); }
+  nameSeg(p){ const s = this.resolve(p); return s.length ? s[s.length-1] : '/'; }
+  canWrite(p, sudo){
+    if(sudo) return true;
+    const segs = this.resolve(p);
+    if(segs.length === 0) return false;
+    const top = segs[0];
+    const prot = ['bin','usr','etc','var','boot','root','opt','srv','proc','sys','dev','lib','sbin','run','mnt','media'];
+    if(segs.length === 1) return false;
+    return !prot.includes(top);
+  }
+  mkdir(p, recursive, sudo){
+    const segs = this.resolve(p);
+    if(!segs.length) return { err: 'mkdir: cannot create directory \u2018/\u2019: File exists' };
+    let cur = this.root, made = [];
+    for(let i=0;i<segs.length;i++){
+      const s = segs[i];
+      if(!cur.ch[s]){
+        if(!this.canWrite('/'+segs.slice(0,i+1).join('/'), sudo))
+          return { err: 'mkdir: cannot create directory \u2018'+p+'\u2019: Permission denied' };
+        if(i < segs.length-1 && !recursive)
+          return { err: 'mkdir: cannot create directory \u2018'+p+'\u2019: No such file or directory' };
+        cur.ch[s] = this.dir(); made.push(s);
+        cur = cur.ch[s];
+      } else {
+        cur = cur.ch[s];
+        if(cur.t !== 'd' && !recursive) return { err: 'mkdir: cannot create directory \u2018'+p+'\u2019: File exists' };
+        if(cur.t !== 'd') return { err: 'mkdir: cannot create directory \u2018'+p+'\u2019: Not a directory' };
+      }
+    }
+    return { ok: true, made };
+  }
+  writeFile(p, content, append, sudo){
+    const segs = this.resolve(p);
+    if(!segs.length) return { err: 'bash: '+p+': Permission denied' };
+    const par = this.nodeOf(segs.slice(0,-1));
+    if(!par || par.t !== 'd') return { err: 'bash: '+p+': No such file or directory' };
+    const name = segs[segs.length-1];
+    const target = par.ch[name];
+    if(target && target.t === 'd') return { err: 'bash: '+p+': Is a directory' };
+    if(!target && !this.canWrite(p, sudo)) return { err: 'bash: '+p+': Permission denied' };
+    if(target && target.o !== S.user && !sudo && target.o !== 'root') {
+      /* still allow writing own-user files; others denied unless sudo */
+      if(!this.canWrite(p, sudo)) return { err: 'bash: '+p+': Permission denied' };
+    }
+    if(target && append){ target.c += content; }
+    else if(target){ target.c = content; }
+    else { par.ch[name] = this.file(content); }
+    if(par.ch[name]) par.ch[name].mt = Date.now();
+    return { ok: true };
+  }
+  rm(p, recursive, sudo){
+    const segs = this.resolve(p);
+    if(!segs.length) return { err: 'rm: it is dangerous to operate recursively on \u2019/\u2019' };
+    const par = this.nodeOf(segs.slice(0,-1));
+    const name = segs[segs.length-1];
+    if(!par || !par.ch[name]) return { err: 'rm: cannot remove \u2018'+p+'\u2019: No such file or directory' };
+    const n = par.ch[name];
+    if(n.t === 'd' && Object.keys(n.ch).length && !recursive)
+      return { err: 'rm: cannot remove \u2018'+p+'\u2019: Is a directory' };
+    if(!this.canWrite('/'+segs.slice(0,-1).join('/'), sudo))
+      return { err: 'rm: cannot remove \u2018'+p+'\u2019: Permission denied' };
+    delete par.ch[name];
+    return { ok: true };
+  }
+  deepCopy(n){ return JSON.parse(JSON.stringify(n)); }
+  copy(src, dst, recursive, sudo){
+    const sn = this.getNode(src);
+    if(!sn) return { err: 'cp: cannot stat \u2018'+src+'\u2019: No such file or directory' };
+    if(sn.t === 'd' && !recursive) return { err: 'cp: -r not specified; omitting directory \u2018'+src+'\u2019' };
+    const dsegs = this.resolve(dst);
+    const dnode = this.getNode(dst);
+    let targetPath = dst, parent, name;
+    if(dnode && dnode.t === 'd'){
+      parent = dnode; name = this.nameSeg(src); targetPath = dst.replace(/\/$/,'')+'/'+name;
+    } else {
+      parent = this.nodeOf(dsegs.slice(0,-1)); name = dsegs[dsegs.length-1];
+      if(!parent || parent.t !== 'd') return { err: 'cp: cannot create \u2018'+dst+'\u2019: No such file or directory' };
+    }
+    if(!this.canWrite(targetPath, sudo)) return { err: 'cp: cannot create \u2018'+dst+'\u2019: Permission denied' };
+    if(parent.ch[name] && parent.ch[name].t === 'd') return { err: 'cp: cannot overwrite directory \u2018'+dst+'\u2019 with non-directory' };
+    parent.ch[name] = this.deepCopy(sn);
+    return { ok: true };
+  }
+  move(src, dst, sudo){
+    const r = this.copy(src, dst, true, sudo);
+    if(r.err) return { err: r.err.replace(/^cp:/,'mv:') };
+    const segs = this.resolve(src);
+    const par = this.nodeOf(segs.slice(0,-1));
+    delete par.ch[segs[segs.length-1]];
+    return { ok: true };
+  }
+  sizeOf(n){
+    if(n.t === 'f') return (n.c||'').length;
+    let s = 0; for(const k in n.ch) s += this.sizeOf(n.ch[k]);
+    return s;
+  }
+  walk(segs, cb){
+    const n = this.nodeOf(segs);
+    if(!n) return;
+    cb(segs, n);
+    if(n.t === 'd'){
+      for(const k of Object.keys(n.ch).sort()) this.walk(segs.concat([k]), cb);
+    }
+  }
+  entryList(n, all){
+    let keys = Object.keys(n.ch);
+    if(!all) keys = keys.filter(k => !k.startsWith('.'));
+    keys.sort((a,b)=>{
+      const da = n.ch[a].t==='d', dbb = n.ch[b].t==='d';
+      if(da !== dbb) return da ? -1 : 1;
+      return a.localeCompare(b);
+    });
+    return keys;
+  }
+}
+
+const vfs = new VFS();
+
+/* ---------- Helpers ---------- */
+function unquote(s){ return s.replace(/^"(.*)"$/,'$1').replace(/^'(.*)'$/,'$1'); }
+function pad(n,w){ n=String(n); while(n.length<w) n=' '+n; return n; }
+function monthName(m){ return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m]; }
+function fmtDate(ts){ const d=new Date(ts); return monthName(d.getMonth())+' '+pad(d.getDate(),2)+' '+pad(d.getHours(),2)+':'+pad(d.getMinutes(),2); }
+function humanSize(b){
+  if(b < 1024) return b+'B';
+  if(b < 1024*1024) return (b/1024).toFixed(1)+'K';
+  return (b/1048576).toFixed(1)+'M';
+}
+function globToRe(pat){
+  const esc = pat.replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'.*').replace(/\?/g,'.');
+  return new RegExp('^'+esc+'$');
+}
+
+/* ---------- Tokenizer / Parser ---------- */
+function tokenize(line){
+  const toks = [], sq = []; let cur = '', q = null, wasSingle = false;
+  for(let i=0;i<line.length;i++){
+    const c = line[i];
+    if(q){ if(c === q){ q = null; } else cur += c; }
+    else if(c === '"' || c === "'"){ q = c; if(c === "'") wasSingle = true; }
+    else if(/\s/.test(c)){ if(cur){ toks.push(cur); sq.push(wasSingle); cur=''; wasSingle=false; } }
+    else if(c === '>' || c === '<'){
+      if(cur){ toks.push(cur); sq.push(wasSingle); cur=''; wasSingle=false; }
+      let op = c;
+      if(line[i+1] === '>'){ op = '>>'; i++; }
+      toks.push(op); sq.push(false);
+    }
+    else cur += c;
+  }
+  if(cur){ toks.push(cur); sq.push(wasSingle); }
+  return { toks, sq };
+}
+function splitTop(line, sep){
+  const parts = []; let cur = '', q = null;
+  for(let i=0;i<line.length;i++){
+    const c = line[i];
+    if(q){ cur += c; if(c === q) q = null; continue; }
+    if(c === '"' || c === "'"){ q = c; cur += c; continue; }
+    if(sep === '&&' && c === '&' && line[i+1] === '&'){ parts.push(cur); cur=''; i++; continue; }
+    if(sep === '|' && c === '|'){ parts.push(cur); cur=''; continue; }
+    cur += c;
+  }
+  parts.push(cur);
+  return parts;
+}
+function expandVars(tok, extra){
+  const env = Object.assign({}, S.vars, extra||{});
+  return tok.replace(/\$\{(\w+)\}|\$(\w+)/g, (m,a,b)=>{
+    const k = a || b;
+    if(k === 'HOME') return S.home;
+    if(k === 'USER') return S.user;
+    if(k === 'PWD') return vfs.cwd;
+    return (k in env) ? env[k] : '';
+  });
+}
+function parseRedirect(tokens){
+  const args = []; let redir = null, inFile = null;
+  for(let i=0;i<tokens.length;i++){
+    const t = tokens[i];
+    if(t === '>' || t === '>>'){ redir = { mode: t, file: null }; continue; }
+    if(t === '<'){ inFile = tokens[i+1] !== undefined ? tokens[i+1] : null; if(inFile) i++; continue; }
+    if(redir && redir.file === null){ redir.file = t; continue; }
+    args.push(t);
+  }
+  if(redir && redir.file === null) redir = null;
+  return { args, redir, inFile };
+}
+
+/* ---------- Aliases & Gated commands ---------- */
+const ALIAS = { sh:'bash', more:'less', dir:'ls', ll:'ls', md:'mkdir', cls:'clear', rename:'mv', rm:'rm', ping:'ping', vim:'vim', vi:'vim' };
+const GATED = { htop:1, tree:1, neofetch:1, cowsay:1, sl:1, figlet:1 };
+
+/* ---------- Command Registry ---------- */
+const CMDS = {};
+const CMDS_ORDER = [];
+function def(name, d, m, run){
+  CMDS[name] = { d, m, run };
+  if(!CMDS_ORDER.includes(name)) CMDS_ORDER.push(name);
+}
+function defAlias(alias, target){ CMDS[alias] = CMDS[target]; }
+
+/* ============ Navigation ============ */
+def('pwd', 'نمایش مسیر پوشه فعلی', 'pwd', (a)=>{
+  return { out: vfs.cwd };
+});
+def('ls', 'نمایش محتوای پوشه‌ها', 'ls [-l] [-a] [-h] [مسیر]', (a, io)=>{
+  let l=false, all=false, h=false;
+  const paths = [];
+  for(const t of a){
+    if(t.startsWith('-') && t.length > 1){
+      if(t.includes('l')) l = true;
+      if(t.includes('a') || t.includes('f')) all = true;
+      if(t.includes('h')) h = true;
+    } else paths.push(t);
+  }
+  if(!paths.length) paths.push('.');
+  let out = '', html = '';
+  const results = [];
+  for(const p of paths){
+    const n = vfs.getNode(p);
+    if(!n){ results.push({ err: 'ls: cannot access \u2018'+p+'\u2019: No such file or directory' }); continue; }
+    const single = paths.length === 1;
+    if(n.t === 'f'){ results.push({ text: p }); continue; }
+    const keys = vfs.entryList(n, all);
+    const items = [];
+    if(all && single){ items.push({ name:'.', node:n }); items.push({ name:'..', node: vfs.nodeOf(vfs.resolve(p).slice(0,-1)) || vfs.root }); }
+    for(const k of keys) items.push({ name: k, node: n.ch[k] });
+    results.push({ dir: p, l, h, items, single });
+  }
+  const errs = results.filter(r=>r.err).map(r=>r.err);
+  const texts = results.filter(r=>r.text !== undefined).map(r=>r.text);
+  const blocks = [];
+  for(const r of results){
+    if(r.err || r.text !== undefined) continue;
+    let o = '', htm = '';
+    if(!r.single) { o += r.dir+':\n'; }
+    if(r.l){
+      const lines = [], hlines = [];
+      if(r.single){ lines.push('total '+(r.items.length*4)); }
+      for(const it of r.items){
+        const nn = it.node; if(!nn) continue;
+        const size = nn.t==='d' ? 4096 : (nn.c||'').length;
+        const sz = r.h ? humanSize(size) : String(size);
+        const line = (nn.t==='d'?'d':'-') + nn.m + '  1 ' + pad(nn.o||'root',8) + ' ' + pad(nn.g||'root',8) + ' ' + pad(sz,6) + ' ' + fmtDate(nn.mt) + ' ';
+        lines.push(line + it.name);
+        hlines.push(line + '<span style="color:'+nameColor(it.name,nn)+'">'+it.name+'</span>');
+      }
+      o += lines.join('\n'); htm += hlines.join('\n');
+    } else {
+      const parts = r.items.map(it=>'<span style="color:'+nameColor(it.name,it.node)+'">'+it.name+'</span>');
+      o += r.items.map(it=>it.name).join('  ');
+      htm += parts.join('  ');
+    }
+    blocks.push({ o, htm, multi: !r.single });
+  }
+  out = errs.concat(texts, blocks.map(b=>b.o)).filter(Boolean).join('\n');
+  const htmAll = texts.concat(errs).concat(blocks.filter(b=>b.multi && b.htm).map(b=>'<span class="t-info">'+b.o.replace(/\n$/,'')+'</span>\n'+b.htm), blocks.filter(b=>!b.multi).map(b=>b.htm)).filter(Boolean).join('\n');
+  html = errs.length ? null : (blocks.some(b=>b.htm) ? htmAll : null);
+  if(!out && !html) out = '';
+  return { out, html: html || null, err: errs.length && !blocks.length ? errs.join('\n') : null };
+});
+function nameColor(name, n){
+  if(!n) return '#e6edf3';
+  if(n.t === 'd') return '#7dd3fc';
+  if(n.m && n.m[2] === 'x') return '#4ade80';
+  if(/\.(png|jpg|jpeg|gif|svg)$/.test(name)) return '#f472b6';
+  if(/\.(tar\.gz|tgz|zip|gz)$/.test(name)) return '#fbbf24';
+  if(/\.(sh)$/.test(name)) return '#4ade80';
+  return '#e6edf3';
+}
+def('cd', 'جابه‌جایی بین پوشه‌ها', 'cd [مسیر]', (a)=>{
+  const target = a[0] || '~';
+  if(target === '-'){ return { err: 'cd: OLDPWD در شبیه‌سازی پشتیبانی نمی‌شود' }; }
+  const n = vfs.getNode(target);
+  if(!n) return { err: 'cd: '+target+': No such file or directory' };
+  if(n.t !== 'd') return { err: 'cd: '+target+': Not a directory' };
+  const segs = vfs.resolve(target);
+  vfs.cwd = '/' + segs.join('/');
+  if(segs.length === 0) vfs.cwd = '/';
+  return { out: '' };
+});
+def('tree', 'نمایش ساختار درختی پوشه‌ها', 'tree [مسیر]', (a, io)=>{
+  const start = a.find(x=>!x.startsWith('-')) || '.';
+  const n = vfs.getNode(start);
+  if(!n) return { err: 'tree: '+start+': No such file or directory' };
+  if(n.t === 'f') return { out: start };
+  let dirs = 0, files = 0, lines = [ vfs.resolve(start).join('/') || '.' ];
+  function rec(node, prefix, depth){
+    if(depth > 4) return;
+    const keys = vfs.entryList(node, false);
+    keys.forEach((k, i)=>{
+      const last = i === keys.length - 1;
+      const child = node.ch[k];
+      lines.push(prefix + (last ? '└── ' : '├── ') + k);
+      if(child.t === 'd'){ dirs++; rec(child, prefix + (last ? '    ' : '│   '), depth+1); }
+      else files++;
+    });
+  }
+  rec(n, '', 0);
+  lines.push('', pad(dirs,4)+' directories, '+pad(files,4)+' files');
+  return { out: lines.join('\n') };
+});
+
+/* ============ File operations ============ */
+def('mkdir', 'ساخت پوشه', 'mkdir [-p] نام‌پوشه', (a, io)=>{
+  let rec = false; const paths = [];
+  for(const t of a){ if(t === '-p' || t === '--parents') rec = true; else if(!t.startsWith('-')) paths.push(t); }
+  if(!paths.length) return { err: 'mkdir: missing operand' };
+  const errs = [];
+  for(const p of paths){
+    const r = vfs.mkdir(p, rec, io.sudo);
+    if(r.err) errs.push(r.err);
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+def('rmdir', 'حذف پوشه خالی', 'rmdir نام‌پوشه', (a, io)=>{
+  if(!a.length) return { err: 'rmdir: missing operand' };
+  const errs = [];
+  for(const p of a){
+    const n = vfs.getNode(p);
+    if(!n) errs.push('rmdir: failed to remove \u2018'+p+'\u2019: No such file or directory');
+    else if(n.t !== 'd') errs.push('rmdir: failed to remove \u2018'+p+'\u2019: Not a directory');
+    else if(Object.keys(n.ch).length) errs.push('rmdir: failed to remove \u2018'+p+'\u2019: Directory not empty');
+    else { const r = vfs.rm(p, false, io.sudo); if(r.err) errs.push(r.err); }
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+def('touch', 'ساخت فایل خالی / به‌روزرسانی زمان', 'touch نام‌فایل', (a, io)=>{
+  const files = a.filter(x=>!x.startsWith('-'));
+  if(!files.length) return { err: 'touch: missing file operand' };
+  const errs = [];
+  for(const p of files){
+    const n = vfs.getNode(p);
+    if(n){ n.mt = Date.now(); continue; }
+    const r = vfs.writeFile(p, '', false, io.sudo);
+    if(r.err) errs.push('touch: cannot touch \u2018'+p+'\u2019: '+r.err.split(': ').pop());
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+def('cp', 'کپی فایل یا پوشه', 'cp [-r] مبدأ مقصد', (a, io)=>{
+  let rec = false; const rest = [];
+  for(const t of a){ if(t.startsWith('-')){ if(t.includes('r')||t.includes('R')||t.includes('a')) rec = true; } else rest.push(t); }
+  if(rest.length < 2) return { err: 'cp: missing destination file operand' };
+  const errs = [];
+  const dst = rest.pop();
+  for(const src of rest){
+    const r = vfs.copy(src, dst, rec, io.sudo);
+    if(r.err) errs.push(r.err);
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+def('mv', 'انتقال یا تغییر نام فایل', 'mv مبدأ مقصد', (a, io)=>{
+  const rest = a.filter(x=>!x.startsWith('-'));
+  if(rest.length < 2) return { err: 'mv: missing destination file operand' };
+  const dst = rest.pop(); const errs = [];
+  for(const src of rest){
+    const r = vfs.move(src, dst, io.sudo);
+    if(r.err) errs.push(r.err);
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+def('rm', 'حذف فایل یا پوشه', 'rm [-r] [-f] نام‌فایل', (a, io)=>{
+  let rec = false, force = false; const paths = [];
+  for(const t of a){
+    if(t.startsWith('-') && t.length>1 && t !== '-'){ if(t.includes('r')||t.includes('R')) rec = true; if(t.includes('f')) force = true; }
+    else paths.push(t);
+  }
+  if(!paths.length) return force ? { out:'' } : { err: 'rm: missing operand' };
+  const errs = [];
+  for(const p of paths){
+    const r = vfs.rm(p, rec, io.sudo);
+    if(r.err && !force) errs.push(r.err);
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+defAlias('unlink','rm');
+
+/* ============ Viewing files ============ */
+function readTextArg(a, io, cmdname){
+  const files = a.filter(x=>!x.startsWith('-'));
+  if(files.length){
+    let txt = '';
+    for(const f of files){
+      const n = vfs.getNode(f);
+      if(!n) return { err: cmdname+': '+f+': No such file or directory' };
+      if(n.t === 'd') return { err: cmdname+': '+f+': Is a directory' };
+      txt += n.c;
+      if(files.length > 1) txt += '\n';
+    }
+    return { text: txt.replace(/\n$/,'') };
+  }
+  return { text: io.stdin != null ? io.stdin : '' };
+}
+def('cat', 'نمایش محتوای فایل', 'cat نام‌فایل', (a, io)=>{
+  const r = readTextArg(a, io, 'cat');
+  if(r.err) return r;
+  return { out: r.text };
+});
+def('less', 'نمایش فایل صفحه‌به‌صفحه (شبیه cat)', 'less نام‌فایل', (a, io)=>{
+  const r = readTextArg(a, io, 'less');
+  if(r.err) return r;
+  return { out: r.text + (r.text ? '\n' : '') + '(END) — در شبیه‌سازی خروجی یک‌جا نمایش داده می‌شود' };
+});
+defAlias('more','less');
+def('head', 'نمایش خطوط ابتدای فایل', 'head [-n N] نام‌فایل', (a, io)=>{
+  let n = 10; const rest = [];
+  for(let i=0;i<a.length;i++){
+    if(a[i] === '-n'){ n = parseInt(a[i+1]) || 10; i++; }
+    else if(/^-n?\d+$/.test(a[i]) && a[i].length > 1){ n = parseInt(a[i].replace('-n','')) || parseInt(a[i].slice(1)) || 10; }
+    else if(!a[i].startsWith('-')) rest.push(a[i]);
+    else if(/^-n$/.test(a[i])){}
+  }
+  const r = readTextArg(rest, io, 'head');
+  if(r.err) return r;
+  return { out: r.text.split('\n').slice(0, n).join('\n') };
+});
+def('tail', 'نمایش خطوط انتهای فایل', 'tail [-n N] نام‌فایل', (a, io)=>{
+  let n = 10; const rest = [];
+  for(let i=0;i<a.length;i++){
+    if(a[i] === '-n'){ n = parseInt(a[i+1]) || 10; i++; }
+    else if(/^-n?\d+$/.test(a[i]) && a[i].length > 1){ n = parseInt(a[i].replace('-n','')) || parseInt(a[i].slice(1)) || 10; }
+    else if(!a[i].startsWith('-')) rest.push(a[i]);
+  }
+  const r = readTextArg(rest, io, 'tail');
+  if(r.err) return r;
+  const lines = r.text.split('\n');
+  return { out: lines.slice(Math.max(0, lines.length - n)).join('\n') };
+});
+def('wc', 'شمارش خط، کلمه و کاراکتر', 'wc [-l|-w|-c] [فایل]', (a, io)=>{
+  let l=false, w=false, c=false; const rest = [];
+  for(const t of a){
+    if(t.startsWith('-') && t.length>1){ if(t.includes('l'))l=true; if(t.includes('w'))w=true; if(t.includes('c'))c=true; }
+    else rest.push(t);
+  }
+  if(!l && !w && !c){ l=w=c=true; }
+  const r = readTextArg(rest, io, 'wc');
+  if(r.err) return r;
+  function count(txt, label){
+    const ls = txt === '' ? [] : txt.split('\n');
+    const lines = txt === '' ? 0 : ls.length;
+    const words = txt === '' ? 0 : txt.split(/\s+/).filter(Boolean).length;
+    const chars = txt.length;
+    const sel = [ l?lines:null, w?words:null, c?chars:null ].filter(x=>x!==null);
+    return { line: pad(l?lines:null,8), o: sel.map(String).join('  ') + (label?' '+label:'') };
+  }
+  if(rest.length){
+    const outs = [];
+    let tl=0,tw=0,tc=0;
+    for(const f of rest){
+      const n = vfs.getNode(f);
+      if(!n) return { err:'wc: '+f+': No such file or directory' };
+      const txt = n.c || '';
+      const ls = txt === '' ? 0 : txt.split('\n').length;
+      const ws = txt === '' ? 0 : txt.split(/\s+/).filter(Boolean).length;
+      tl += ls; tw += ws; tc += txt.length;
+      const sel = [l?ls:null, w?ws:null, c?txt.length:null].filter(x=>x!==null);
+      outs.push(sel.map(String).join('  ')+' '+f);
+    }
+    if(rest.length > 1) outs.push([l?tl:null,w?tw:null,c?tc:null].filter(x=>x!==null).map(String).join('  ')+' total');
+    return { out: outs.join('\n') };
+  }
+  return { out: count(r.text, '').o.trimEnd() };
+});
+def('echo', 'چاپ متن (با امکان ذخیره در فایل)', 'echo [متن] [> فایل]', (a)=>{
+  let nl = true; const parts = [];
+  for(const t of a){ if(t === '-n'){ nl = false; } else parts.push(t); }
+  return { out: parts.join(' ') + (nl ? '' : '') };
+});
+/* ============ Search ============ */
+def('grep', 'جستجوی متن در فایل یا ورودی', 'grep [-i] [-n] [-v] [-r] الگو [فایل]', (a, io)=>{
+  let ign=false, num=false, inv=false, rec=false, cnt=false;
+  const rest = [];
+  for(const t of a){
+    if(t.startsWith('-') && t.length>1){
+      if(t.includes('i')) ign=true;
+      if(t.includes('n')) num=true;
+      if(t.includes('v')) inv=true;
+      if(t.includes('r')||t.includes('R')) rec=true;
+      if(t.includes('c')) cnt=true;
+    } else rest.push(t);
+  }
+  if(!rest.length) return { err: 'grep: usage: grep [-ivnr] PATTERN [FILE...]' };
+  const pat = rest.shift();
+  let re;
+  try { re = new RegExp(pat, ign ? 'i' : ''); } catch(e){ re = new RegExp(pat.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), ign?'i':''); }
+  const sources = [];
+  if(rec || (rest.length && vfs.isDir(rest[0]))){
+    const start = rest.length ? rest[0] : '.';
+    const startSegs = vfs.resolve(start);
+    vfs.walk(startSegs, (segs, n)=>{
+      if(n.t === 'f') sources.push({ name: '/'+segs.join('/'), text: n.c });
+    });
+  } else if(rest.length){
+    for(const f of rest){
+      const n = vfs.getNode(f);
+      if(!n){ return { err: 'grep: '+f+': No such file or directory' }; }
+      if(n.t === 'd') return { err: 'grep: '+f+': Is a directory' };
+      sources.push({ name: f, text: n.c, single: rest.length === 1 });
+    }
+  } else {
+    sources.push({ name: null, text: io.stdin != null ? io.stdin : '', single: true });
+  }
+  const outLines = [], htmlLines = [];
+  let total = 0;
+  for(const src of sources){
+    const lines = (src.text||'').split('\n');
+    if(src.text === '') continue;
+    let matched = 0;
+    lines.forEach((ln, idx)=>{
+      const m = re.test(ln);
+      if(inv ? !m : m){
+        matched++; total++;
+        const pfx = (sources.length > 1 && src.name) ? src.name+':' : '';
+        const np = num ? (idx+1)+':' : '';
+        outLines.push(pfx + np + ln);
+        const marked = ln.replace(new RegExp(re.source, ign?'gi':'g'), m2=>'<span class="t-mark">'+m2+'</span>');
+        htmlLines.push('<span class="t-dim">'+pfx+np+'</span>'+marked);
+      }
+    });
+    if(cnt && src.name) outLines.push(src.name+':'+matched);
+  }
+  if(cnt) return { out: String(sources.length === 1 ? total : total) };
+  if(!outLines.length) return { out: '', exitNoMatch: true };
+  return { out: outLines.join('\n'), html: htmlLines.join('\n') };
+});
+def('find', 'جستجوی فایل و پوشه', 'find [مسیر] [-name الگو] [-type f|d]', (a)=>{
+  let start = '.', namePat = null, type = null;
+  for(let i=0;i<a.length;i++){
+    if(a[i] === '-name'){ namePat = a[++i]; }
+    else if(a[i] === '-type'){ type = a[++i]; }
+    else if(a[i] === '-maxdepth'){ i++; }
+    else if(!a[i].startsWith('-') && start === '.') start = a[i];
+  }
+  const n = vfs.getNode(start);
+  if(!n) return { err: 'find: \u2018'+start+'\u2019: No such file or directory' };
+  const startSegs = vfs.resolve(start);
+  const base = '/' + startSegs.join('/');
+  const out = [];
+  const nre = namePat ? globToRe(namePat) : null;
+  vfs.walk(startSegs, (segs, node)=>{
+    const p = segs.length === 0 ? '/' : ('/' + segs.join('/'));
+    const rel = p === base ? (start === '.' ? '.' : base)
+      : (start === '.' ? './'+segs.slice(startSegs.length).join('/')
+         : (base === '/' ? '' : base) + '/' + segs.slice(startSegs.length).join('/'));
+    if(type === 'f' && node.t !== 'f') return;
+    if(type === 'd' && node.t !== 'd') return;
+    if(nre && !nre.test(segs[segs.length-1] || '/')) return;
+    out.push(rel);
+  });
+  return { out: out.join('\n') };
+});
+def('which', 'نمایش مسیر یک دستور', 'which دستور', (a)=>{
+  if(!a.length) return { err: 'which: missing operand' };
+  const c = a[0];
+  if(CMDS[c]) return { out: '/usr/bin/'+c };
+  return { err: '' , out: '' };
+});
+def('file', 'تشخیص نوع فایل', 'file نام‌فایل', (a)=>{
+  if(!a.length) return { err: 'file: missing operand' };
+  const out = [];
+  for(const p of a){
+    const n = vfs.getNode(p);
+    if(!n) out.push(p+': cannot open (No such file or directory)');
+    else if(n.t === 'd') out.push(p+': directory');
+    else if(/\.sh$/.test(p)) out.push(p+': Bourne-Again shell script, ASCII text executable');
+    else if(/\.(png|jpg|jpeg|gif)$/.test(p)) out.push(p+': image data');
+    else if(/\.py$/.test(p)) out.push(p+': Python script, ASCII text executable');
+    else out.push(p+': ASCII text');
+  }
+  return { out: out.join('\n') };
+});
+def('sort', 'مرتب‌سازی خطوط', 'sort [-r] [-n] [فایل]', (a, io)=>{
+  let rev=false, num=false; const rest = [];
+  for(const t of a){ if(t.startsWith('-')&&t.length>1){ if(t.includes('r'))rev=true; if(t.includes('n'))num=true; } else rest.push(t); }
+  let text;
+  if(rest.length){ const r = readTextArg(rest, io, 'sort'); if(r.err) return r; text = r.text; }
+  else text = io.stdin != null ? io.stdin : '';
+  let lines = text.split('\n').filter(x=>x !== '');
+  lines.sort((x,y)=> num ? (parseFloat(x)-parseFloat(y)) : x.localeCompare(y));
+  if(rev) lines.reverse();
+  return { out: lines.join('\n') };
+});
+def('uniq', 'حذف خطوط تکراری مجاور', 'uniq [-c] [فایل]', (a, io)=>{
+  let c=false; const rest = [];
+  for(const t of a){ if(t.startsWith('-')&&t.length>1){ if(t.includes('c'))c=true; } else rest.push(t); }
+  let text;
+  if(rest.length){ const r = readTextArg(rest, io, 'uniq'); if(r.err) return r; text = r.text; }
+  else text = io.stdin != null ? io.stdin : '';
+  const lines = text.split('\n').filter(x=>x !== '');
+  const res = [];
+  let i = 0;
+  while(i < lines.length){
+    let j = i;
+    while(j < lines.length && lines[j] === lines[i]) j++;
+    res.push(c ? pad(j-i,8)+' '+lines[i] : lines[i]);
+    i = j;
+  }
+  return { out: res.join('\n') };
+});
+
+/* ============ Permissions & ownership ============ */
+function octalToMode(o3){
+  const names = ['rwx','rwx','rwx'];
+  let m = '';
+  for(let i=0;i<3;i++){
+    const v = parseInt(o3[i]);
+    m += ((v&4)?'r':'-') + ((v&2)?'w':'-') + ((v&1)?'x':'-');
+  }
+  return m;
+}
+def('chmod', 'تغییر دسترسی فایل', 'chmod 755 فایل | chmod +x فایل', (a, io)=>{
+  if(a.length < 2) return { err: 'chmod: missing operand' };
+  const mode = a[0]; const files = a.slice(1).filter(x=>!x.startsWith('-'));
+  const errs = [];
+  for(const p of files){
+    const n = vfs.getNode(p);
+    if(!n){ errs.push('chmod: cannot access \u2018'+p+'\u2019: No such file or directory'); continue; }
+    if(/^\d{3,4}$/.test(mode)){
+      const o3 = mode.slice(-3);
+      n.m = octalToMode(o3);
+    } else {
+      let m = n.m;
+      for(const seg of mode.split(',')){
+        const mm = seg.match(/^([ugoa]*)([+\-=])([rwxX]+)$/);
+        if(!mm){ errs.push("chmod: invalid mode: \u2018"+seg+"\u2019"); continue; }
+        const who = mm[1] || 'a';
+        const op = mm[2], bits = mm[3];
+        const groups = [];
+        if(who.includes('u') || who === 'a') groups.push([0,1,2]);
+        if(who.includes('g') || who === 'a') groups.push([3,4,5]);
+        if(who.includes('o') || who === 'a') groups.push([6,7,8]);
+        m = m.split('');
+        for(const g of groups){
+          for(const ch of bits){
+            const real = ch === 'X' ? 'x' : ch;
+            const map = { r:0, w:1, x:2 };
+            if(!(real in map)) continue;
+            const idx = g[map[real]];
+            if(op === '+') m[idx] = real;
+            else if(op === '-') m[idx] = '-';
+            else if(op === '=') m[idx] = real;
+          }
+        }
+        n.m = m.join('');
+      }
+    }
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+def('chown', 'تغییر مالک فایل', 'sudo chown user[:group] فایل', (a, io)=>{
+  if(a.length < 2) return { err: 'chown: missing operand' };
+  if(!io.sudo) return { err: 'chown: changing ownership: Operation denied\n(راهنمایی: تغییر مالک به دسترسی root نیاز دارد — از sudo استفاده کنید)' };
+  const spec = a[0]; const files = a.slice(1);
+  const errs = [];
+  for(const p of files){
+    const n = vfs.getNode(p);
+    if(!n){ errs.push('chown: cannot access \u2018'+p+'\u2019: No such file or directory'); continue; }
+    const [ow, gr] = spec.split(':');
+    if(ow) n.o = ow;
+    if(gr) n.g = gr;
+  }
+  return errs.length ? { err: errs.join('\n') } : { out: '' };
+});
+
+/* ============ Users ============ */
+def('whoami', 'نام کاربر فعلی', 'whoami', ()=>{
+  return { out: S.user };
+});
+def('id', 'شناسه کاربر و گروه‌ها', 'id [کاربر]', (a)=>{
+  const u = a[0] || S.user;
+  if(u === 'root') return { out: 'uid=0(root) gid=0(root) groups=0(root)' };
+  return { out: 'uid=1000('+u+') gid=1000('+u+') groups=1000('+u+'),27(sudo),4(adm)' };
+});
+def('groups', 'گروه‌های کاربر', 'groups [کاربر]', (a)=>{
+  const u = a[0] || S.user;
+  if(u === 'root') return { out: 'root' };
+  return { out: u+' sudo adm' };
+});
+function requireSudo(io, cmd){
+  if(io.sudo) return null;
+  return { err: cmd+': Permission denied — این دستور به دسترسی مدیر نیاز دارد.\n(راهنمایی: با sudo اجرا کنید: sudo '+cmd+' ...)' };
+}
+def('useradd', 'ساخت کاربر جدید', 'sudo useradd نام‌کاربری', (a, io)=>{
+  const d = requireSudo(io, 'useradd'); if(d) return d;
+  const u = (a.find(x=>!x.startsWith('-')) || '');
+  if(!u) return { err: 'useradd: missing user name' };
+  const pn = vfs.getNode('/etc/passwd');
+  if(pn.c.includes(u+':')) return { err: 'useradd: user '+u+' already exists' };
+  const uid = 1001 + (pn.c.split('\n').length - 2);
+  pn.c += u+':x:'+uid+':'+uid+'::/home/'+u+':/bin/bash\n';
+  vfs.mkdir('/home/'+u, true, true);
+  const gn = vfs.getNode('/etc/group');
+  gn.c += u+':x:'+uid+':\n';
+  return { out: '' };
+});
+defAlias('adduser','useradd');
+def('passwd', 'تغییر رمز کاربر', 'sudo passwd نام‌کاربری', (a, io)=>{
+  const u = a.find(x=>!x.startsWith('-')) || S.user;
+  if(u !== S.user){ const d = requireSudo(io, 'passwd'); if(d) return d; }
+  return { out: 'Changing password for '+u+'\nNew password: ********\nRetype new password: ********\npasswd: password updated successfully' };
+});
+def('su', 'تعویض کاربر', 'su [نام‌کاربری]', (a)=>{
+  const u = a[0] || 'root';
+  S.user = u;
+  return { out: '(کاربر فعلی به '+u+' تغییر کرد — برای بازگشت دستور exit را بزنید)' };
+});
+
+/* ============ System info ============ */
+def('uname', 'اطلاعات هسته سیستم', 'uname [-a]', (a)=>{
+  if(a.some(x=>x.includes('a'))) return { out: 'Linux '+S.host+' 5.15.0-academy #1 SMP PREEMPT x86_64 GNU/Linux' };
+  if(a.some(x=>x.includes('r'))) return { out: '5.15.0-academy' };
+  return { out: 'Linux' };
+});
+def('hostname', 'نام میزبان سیستم', 'hostname', ()=>({ out: S.host }));
+def('date', 'نمایش تاریخ و زمان', 'date', ()=>{
+  const d = new Date();
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return { out: days[d.getDay()]+' '+monthName(d.getMonth())+' '+pad(d.getDate(),2)+' '+pad(d.getHours(),2)+':'+pad(d.getMinutes(),2)+':'+pad(d.getSeconds(),2)+' UTC '+d.getFullYear() };
+});
+def('uptime', 'مدت روشن بودن سیستم', 'uptime', ()=>{
+  const d = new Date();
+  return { out: ' '+pad(d.getHours(),2)+':'+pad(d.getMinutes(),2)+':'+pad(d.getSeconds(),2)+' up 2 days,  3:14,  1 user,  load average: 0.42, 0.35, 0.28' };
+});
+def('df', 'نمایش فضای دیسک', 'df [-h]', (a)=>{
+  const h = a.some(x=>x.includes('h'));
+  return { out:
+'Filesystem      Size  Used Avail Use% Mounted on\n'+
+'/dev/sda1        40G   12G   26G  32% /\n'+
+'tmpfs           2.0G  1.2M  2.0G   1% /dev/shm\n'+
+'/dev/sdb1       100G   45G   55G  45% /data' };
+});
+def('du', 'اندازه پوشه‌ها', 'du [-sh] [مسیر]', (a)=>{
+  let s=false, h=false; const rest = [];
+  for(const t of a){ if(t.startsWith('-')&&t.length>1){ if(t.includes('s'))s=true; if(t.includes('h'))h=true; } else rest.push(t); }
+  const start = rest[0] || '.';
+  const n = vfs.getNode(start);
+  if(!n) return { err: 'du: cannot access \u2018'+start+'\u2019: No such file or directory' };
+  const fmt = b => h ? humanSize(b) : String(Math.ceil(b/1024));
+  if(s || n.t === 'f') return { out: fmt(vfs.sizeOf(n)) + '\t' + start };
+  const out = [];
+  for(const k of vfs.entryList(n, false)){
+    out.push(fmt(vfs.sizeOf(n.ch[k])) + '\t' + (start === '.' ? './'+k : start.replace(/\/$/,'')+'/'+k));
+  }
+  out.push(fmt(vfs.sizeOf(n)) + '\t' + start);
+  return { out: out.join('\n') };
+});
+def('free', 'نمایش حافظه', 'free [-h]', (a)=>{
+  return { out:
+'               total        used        free      shared  buff/cache   available\n'+
+'Mem:            3.9G        1.4G        1.2G         98M        1.3G        2.2G\n'+
+'Swap:           2.0G          0B        2.0G' };
+});
+def('cal', 'نمایش تقویم ماه', 'cal', ()=>{
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  const first = new Date(y, m, 1).getDay();
+  const days = new Date(y, m+1, 0).getDate();
+  const title = monthName(m)+' '+y;
+  const head = 'Su Mo Tu We Th Fr Sa';
+  let rows = [];
+  let cur = '   '.repeat(first % 7);
+  for(let d=1; d<=days; d++){
+    cur += pad(d,2) + ' ';
+    if((first + d) % 7 === 0){ rows.push(cur.trimEnd()); cur = ''; }
+  }
+  if(cur.trim()) rows.push(cur.trimEnd());
+  const lines = [ title.padStart(Math.floor((21+title.length)/2)), head ].concat(rows);
+  return { out: lines.join('\n'), html: lines.map((ln,i)=> i===0 ? '<span class="t-ok">'+ln+'</span>' : ln).join('\n') };
+});
+def('env', 'نمایش متغیرهای محیطی', 'env', ()=>{
+  const lines = ['PATH='+S.vars.PATH, 'SHELL='+S.vars.SHELL, 'USER='+S.user, 'HOME='+S.home, 'PWD='+vfs.cwd];
+  for(const k in S.vars){ if(!['PATH','SHELL','USER','HOME','PWD'].includes(k)) lines.push(k+'='+S.vars[k]); }
+  return { out: lines.join('\n') };
+});
+def('export', 'تعریف متغیر محیطی', 'export NAME=value', (a)=>{
+  for(const t of a){
+    const m = t.match(/^(\w+)=(.*)$/);
+    if(m) S.vars[m[1]] = unquote(m[2]);
+  }
+  return { out: '' };
+});
+def('history', 'تاریخچه دستورها', 'history', ()=>{
+  const out = S.history.map((h,i)=> pad(i+1,5)+'  '+h).join('\n');
+  return { out };
+});
+
+/* ============ Processes ============ */
+const BASE_PROCS = [
+  ['root', 1, '0.0', '0.1', 'init'],
+  ['root', 310, '0.0', '0.2', '/lib/systemd/systemd-journald'],
+  ['root', 415, '0.0', '0.3', '/usr/sbin/sshd'],
+  ['root', 502, '0.1', '0.5', '/usr/sbin/nginx'],
+];
+def('ps', 'نمایش پروسه‌های در حال اجرا', 'ps [aux]', (a)=>{
+  const aux = a.some(x=>x.includes('a'));
+  const rows = [];
+  if(aux){
+    rows.push('USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND');
+    for(const p of BASE_PROCS) rows.push(pad(p[0],9)+pad(p[1],5)+'  '+p[2]+' '+p[3]+'  12340  1024 ?        Ss   09:00   0:01 '+p[4]);
+    rows.push(pad(S.user,9)+pad(S.pid-1,5)+'  0.2  0.4  14520  3112 pts/0    Ss   09:12   0:00 -bash');
+    for(const j of S.jobs) rows.push(pad(S.user,9)+pad(j.pid,5)+'  0.0  0.1  11000   800 pts/0    S    09:30   0:00 '+j.cmd);
+  } else {
+    rows.push('    PID TTY          TIME CMD');
+    rows.push(pad(S.pid-1,6)+' pts/0    00:00:00 bash');
+    for(const j of S.jobs) rows.push(pad(j.pid,6)+' pts/0    00:00:00 '+j.cmd.split(' ')[0]);
+    rows.push(pad(S.pid,6)+' pts/0    00:00:00 ps');
+  }
+  return { out: rows.join('\n') };
+});
+def('top', 'نمایش زنده پروسه‌ها (نمایشی)', 'top', ()=>{
+  const rows = [
+    '<span class="t-ok">top - 09:31:02 up 2 days,  3:19,  1 user,  load average: 0.52, 0.44, 0.31</span>',
+    '<span class="t-info">Tasks:  98 total,   1 running,  97 sleeping</span>',
+    '%Cpu(s):  12.3 us,   4.1 sy,   0.0 ni, 82.9 id',
+    'MiB Mem :   3987.0 total,   1220.5 free,   1430.2 used,   1336.3 buff/cache',
+    '',
+    '  PID USER      %CPU  %MEM  COMMAND',
+  ];
+  BASE_PROCS.slice(0,3).forEach((p,i)=>rows.push(pad(p[1],5)+' '+pad(p[0],9)+'  '+(9.1-i*3).toFixed(1)+'  '+(0.4-i*0.1).toFixed(1)+'  '+p[4]));
+  S.jobs.forEach(j=>rows.push(pad(j.pid,5)+' '+pad(S.user,9)+'   0.3   0.1  '+j.cmd));
+  rows.push('', '<span class="t-dim">(نمایشی است — برای خروج q را فشار دهید · در شبیه‌سازی همین تصویر ثابت است)</span>');
+  return { html: rows.join('\n'), out: rows.map(r=>r.replace(/<[^>]+>/g,'')).join('\n') };
+});
+def('jobs', 'نمایش کارهای پس‌زمینه', 'jobs', ()=>{
+  if(!S.jobs.length) return { out: '' };
+  return { out: S.jobs.map((j,i)=>'['+(i+1)+']  + '+pad(j.pid,6)+' '+(j.state==='Running'?'Running':'Done')+'    '+j.cmd).join('\n') };
+});
+def('sleep', 'توقف موقت (در پس‌زمینه با &)', 'sleep ثانیه [&]', (a, io)=>{
+  const secs = parseFloat(a[0]) || 1;
+  return { out: '', silent: true };
+});
+def('kill', 'پایان دادن به پروسه', 'kill [-9] PID', (a)=>{
+  const sig9 = a.some(x=>x === '-9' || x.includes('9') && x.startsWith('-'));
+  const pid = parseInt(a.find(x=>!/^-/.test(x)));
+  if(!pid) return { err: 'kill: usage: kill [-9] pid' };
+  const idx = S.jobs.findIndex(j=>j.pid === pid);
+  if(idx === -1) return { err: 'kill: ('+pid+') - No such process' };
+  const j = S.jobs[idx];
+  S.jobs.splice(idx,1);
+  return { out: '['+(idx+1)+']   '+(sig9 ? 'Killed' : 'Terminated')+'    '+j.cmd };
+});
+def('bg', 'ادامه کار متوقف در پس‌زمینه (نمایشی)', 'bg', ()=>({ out: 'bash: bg: current job has no stopped processes' }));
+def('fg', 'آوردن کار به پیش‌زمینه (نمایشی)', 'fg [%n]', ()=>({ out: 'bash: fg: در شبیه‌سازی همه کارها همین‌جا اجرا می‌شوند' }));
+
+/* ============ Packages ============ */
+const CATALOG = {
+  htop:   'interactive process viewer',
+  tree:   'list contents of directories in a tree-like format',
+  neofetch:'shows Linux system information with distribution logo',
+  cowsay: 'configurable talking cow',
+  sl:     'steam locomotive runs across your terminal',
+  figlet: 'makes large text out of ordinary screen letters',
+  ncdu:   'ncurses disk usage analyzer',
+  tmux:   'terminal multiplexer'
+};
+def('apt', 'مدیریت بسته‌های نرم‌افزاری', 'apt update | install | remove | search | list', (a, io)=>{
+  const sub = a[0];
+  const name = a.find((x,i)=>i>0 && !x.startsWith('-'));
+  const sudoNeeded = ['update','install','remove','upgrade'].includes(sub);
+  if(sudoNeeded && !io.sudo)
+    return { err: 'E: Could not open lock file ... are you root?\n(راهنمایی: برای مدیریت بسته‌ها از sudo استفاده کنید: sudo apt '+sub+' ...)' };
+  switch(sub){
+    case 'update':
+      return { out:
+'Hit:1 http://archive.ubuntu.com/academy stable InRelease\n'+
+'Get:2 http://security.academy.com stable-security InRelease [110 kB]\n'+
+'Fetched 110 kB in 1s (104 kB/s)\n'+
+'Reading package lists... Done\n'+
+'All packages are up to date.' };
+    case 'install': {
+      if(!name) return { err: 'apt: no package specified' };
+      if(S.installed.has(name)) return { out: 'Reading package lists... Done\n'+name+' is already the newest version (1.0.0).\n0 upgraded, 0 newly installed.' };
+      S.installed.add(name);
+      const desc = CATALOG[name] || 'package '+name;
+      return { out:
+'Reading package lists... Done\n'+
+'Building dependency tree... Done\n'+
+'The following NEW packages will be installed:\n  '+name+'\n'+
+'0 upgraded, 1 newly installed, 0 to remove.\n'+
+'Need to get 128 kB of archives.\n'+
+'Get:1 http://archive.ubuntu.com/academy stable/main amd64 '+name+' amd64 1.0.0 [128 kB]\n'+
+'Fetched 128 kB in 0s (512 kB/s)\n'+
+'Selecting previously unselected package '+name+'.\n'+
+'Setting up '+name+' (1.0.0) ...\n'+
+'Processing triggers for man-db ...' };
+    }
+    case 'remove': {
+      if(!name) return { err: 'apt: no package specified' };
+      if(!S.installed.has(name)) return { err: "E: Package '"+name+"' is not installed, so not removed" };
+      S.installed.delete(name);
+      return { out: 'Reading package lists... Done\nThe following packages will be REMOVED:\n  '+name+'\nRemoving '+name+' (1.0.0) ...' };
+    }
+    case 'search': {
+      if(!name) return { err: 'apt: no search term given' };
+      const res = Object.keys(CATALOG).filter(k=>k.includes(name) || CATALOG[k].includes(name));
+      if(!res.length) return { out: 'Sorting... Done\nFull Text Search... Done' };
+      return { out: 'Sorting... Done\nFull Text Search... Done\n' + res.map(k=>k+'/stable 1.0.0 amd64\n  '+CATALOG[k]).join('\n') };
+    }
+    case 'list':
+      return { out: 'Listing... Done\n' + Array.from(S.installed).sort().map(k=>k+'/stable,now 1.0.0 amd64 [installed]').join('\n') };
+    case 'upgrade':
+      return { out: 'Reading package lists... Done\nCalculating upgrade... Done\n0 upgraded, 0 newly installed, 0 to remove.' };
+  }
+  return { err: 'apt: invalid operation: '+sub+'\n(دستورهای معتبر: update, install, remove, search, list, upgrade)' };
+});
+defAlias('apt-get','apt');
+
+/* ============ Network ============ */
+function fakeIp(host){
+  let h = 0; for(const c of host) h = (h*31 + c.charCodeAt(0)) % 997;
+  return '142.250.185.' + (h % 250 + 1);
+}
+def('ping', 'تست اتصال شبکه', 'ping [-c N] host', (a)=>{
+  const cIdx = a.indexOf('-c');
+  let count = 4; const rest = [];
+  if(cIdx > -1){ count = parseInt(a[cIdx+1]) || 4; }
+  for(let i=0;i<a.length;i++){ if(i === cIdx || (cIdx>-1 && i === cIdx+1)) continue; if(!a[i].startsWith('-')) rest.push(a[i]); }
+  const host = rest[0];
+  if(!host) return { err: 'ping: usage error: Destination address required' };
+  if(host === 'badhost' || host === 'nowhere.test')
+    return { err: 'ping: '+host+': Name or service not known' };
+  const ip = fakeIp(host);
+  const lines = ['PING '+host+' ('+ip+') 56(84) bytes of data.'];
+  let total = 0;
+  for(let i=1;i<=count;i++){
+    const t = (8 + Math.random()*20).toFixed(1);
+    total += parseFloat(t);
+    lines.push('64 bytes from '+ip+': icmp_seq='+i+' ttl=115 time='+t+' ms');
+  }
+  lines.push('', '--- '+host+' ping statistics ---',
+    count+' packets transmitted, '+count+' received, 0% packet loss, time '+(count*93)+'ms');
+  return { out: lines.join('\n') };
+});
+def('curl', 'دریافت محتوای وب', 'curl آدرس', (a)=>{
+  const url = (a.find(x=>!x.startsWith('-')) || '');
+  const host = url.replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+  if(!host) return { err: 'curl: no URL specified' };
+  if(host.includes('badhost')) return { err: 'curl: (6) Could not resolve host: '+host };
+  if(host.includes('example.com')){
+    return { out: '<!doctype html>\n<html>\n<head><title>Example Domain</title></head>\n<body>\n<h1>Example Domain</h1>\n<p>This domain is for use in examples.</p>\n</body>\n</html>' };
+  }
+  if(host.includes('api.github')) return { out: '{\n  "current_user_url": "https://api.github.com/user"\n}' };
+  return { out: '<!doctype html>\n<html><head><title>'+host+'</title></head>\n<body><h1>Welcome to '+host+'</h1></body></html>' };
+});
+def('wget', 'دانلود فایل (نمایشی)', 'wget آدرس', (a)=>{
+  const url = (a.find(x=>!x.startsWith('-')) || '');
+  const name = url.split('/').pop() || 'index.html';
+  if(!url) return { err: 'wget: missing URL' };
+  vfs.writeFile(S.home+'/'+name, 'downloaded content from '+url+'\n');
+  return { out: '--'+new Date().toISOString().slice(0,19)+'--  '+url+'\nSaving to: \u2018'+name+'\u2019\n\n100%[=================================>]  1,024       --.-K/s\n\n\u2018'+name+'\u2019 saved' };
+});
+def('ifconfig', 'نمایش کارت‌های شبکه', 'ifconfig', ()=>({
+  out:
+'eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500\n'+
+'        inet 10.0.2.15  netmask 255.255.255.0  broadcast 10.0.2.255\n'+
+'        ether 08:00:27:1a:2b:3c  txqueuelen 1000  (Ethernet)\n'+
+'        RX packets 10234  bytes 8712345 (8.7 MB)\n\n'+
+'lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536\n'+
+'        inet 127.0.0.1  netmask 255.0.0.0\n'+
+'        RX packets 412  bytes 33621 (33.6 KB)'
+}));
+def('ip', 'نمایش/مدیریت شبکه', 'ip a | ip route', (a)=>{
+  if(a[0] === 'route') return { out: 'default via 10.0.2.2 dev eth0\n10.0.2.0/24 dev eth0 proto kernel scope link' };
+  return {
+  out:
+'1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536\n    inet 127.0.0.1/8 scope host lo\n'+
+'2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500\n    inet 10.0.2.15/24 brd 10.0.2.255 scope global eth0' };
+});
+defAlias('ifconf','ifconfig');
+
+/* ============ Archives ============ */
+def('tar', 'ساخت و استخراج آرشیو', 'tar -czf out.tar.gz files | tar -xzf arch.tar.gz [-C dir] | tar -tzf arch.tar.gz', (a, io)=>{
+  let flags = '';
+  for(const t of a){ if(t.startsWith('-') && !t.startsWith('--')) flags += t.replace(/-/g,''); }
+  const rest = a.filter(x=>!x.startsWith('-'));
+  const create = flags.includes('c'), extract = flags.includes('x'), list = flags.includes('t');
+  const hasF = flags.includes('f');
+  let name = null;
+  let paths = rest.slice();
+  if(hasF && rest.length){ name = rest[0]; paths = rest.slice(1); }
+  if(!name) return { err: 'tar: an archive name must be specified with -f\n(مثال: tar -czf archive.tar.gz documents)' };
+  if(!/\.(tar\.gz|tgz|tar)$/.test(name)){ name += '.tar.gz'; }
+  if(create){
+    if(!paths.length) return { err: 'tar: cowardly refusing to create an empty archive' };
+    const entries = [];
+    for(const p of paths){
+      const n = vfs.getNode(p);
+      if(!n) return { err: 'tar: '+p+': Cannot stat: No such file or directory' };
+      const segs = vfs.resolve(p);
+      const baseName = segs[segs.length-1];
+      if(n.t === 'd'){
+        entries.push({ p: baseName+'/', c: null });
+        vfs.walk(segs, (ss, nd)=>{
+          const rel = ss.slice(segs.length-1).join('/');
+          if(nd.t === 'd'){ if(rel !== baseName) entries.push({ p: rel+'/', c: null }); }
+          else entries.push({ p: rel, c: nd.c });
+        });
+      } else entries.push({ p: baseName, c: n.c });
+    }
+    vfs.TAR[name] = entries;
+    const r = vfs.writeFile(name, '\u2020tar-archive-data:'+name, false, io.sudo);
+    if(r.err) return r;
+    return { out: '' };
+  }
+  if(list){
+    const t = vfs.TAR[name];
+    if(!t) return { err: 'tar: '+name+': Cannot open: No such file or directory' };
+    return { out: t.map(e=>e.p).join('\n') };
+  }
+  if(extract){
+    const t = vfs.TAR[name];
+    if(!t) return { err: 'tar: '+name+': Cannot open: No such file or directory' };
+    const cIdx = a.indexOf('-C');
+    const dest = cIdx > -1 ? a[cIdx+1] : '.';
+    if(!vfs.isDir(dest)) return { err: 'tar: '+dest+': Cannot chdir: No such file or directory' };
+    for(const e of t){
+      if(e.p.endsWith('/')){
+        vfs.mkdir(dest+'/'+e.p.replace(/\/$/,''), true, io.sudo);
+      } else {
+        vfs.writeFile(dest+'/'+e.p, e.c || '', false, io.sudo);
+      }
+    }
+    return { out: '' };
+  }
+  return { err: 'tar: you must specify one of -c, -x or -t' };
+});
+def('gzip', 'فشرده‌سازی فایل', 'gzip فایل', (a, io)=>{
+  const p = a.find(x=>!x.startsWith('-'));
+  if(!p) return { err: 'gzip: no file specified' };
+  const n = vfs.getNode(p);
+  if(!n) return { err: 'gzip: '+p+': No such file or directory' };
+  if(n.t === 'd') return { err: 'gzip: '+p+' is a directory (از tar استفاده کنید)' };
+  const segs = vfs.resolve(p);
+  const par = vfs.nodeOf(segs.slice(0,-1));
+  const nm = segs[segs.length-1];
+  vfs.GZ[nm+'.gz'] = n.c;
+  delete par.ch[nm];
+  par.ch[nm+'.gz'] = vfs.file('\u2020gzip-data:'+nm, 'rw-r--r--');
+  return { out: '' };
+});
+def('gunzip', 'استخراج فایل فشرده', 'gunzip فایل.gz', (a, io)=>{
+  const p = a.find(x=>!x.startsWith('-'));
+  if(!p) return { err: 'gunzip: no file specified' };
+  const segs = vfs.resolve(p);
+  const nm = segs[segs.length-1];
+  if(!vfs.GZ[nm]) return { err: 'gunzip: '+p+': unknown compressed format (فایل با همین شبیه‌ساز فشرده نشده است)' };
+  const par = vfs.nodeOf(segs.slice(0,-1));
+  delete par.ch[nm];
+  const orig = nm.replace(/\.gz$/,'');
+  par.ch[orig] = vfs.file(vfs.GZ[nm], 'rw-r--r--');
+  delete vfs.GZ[nm];
+  return { out: '' };
+});
+def('zip', 'ساخت آرشیو zip', 'zip out.zip files...', (a, io)=>{
+  const rest = a.filter(x=>!x.startsWith('-'));
+  if(rest.length < 2) return { err: 'zip: usage: zip archive.zip files...' };
+  let name = rest[0]; if(!/\.zip$/.test(name)) name += '.zip';
+  const entries = [];
+  for(const p of rest.slice(1)){
+    const n = vfs.getNode(p);
+    if(!n) return { err: 'zip: '+p+': No such file or directory' };
+    const segs = vfs.resolve(p);
+    entries.push({ p: segs[segs.length-1] + (n.t==='d'?'/':''), c: n.t==='f'?n.c:null });
+    if(n.t === 'd') vfs.walk(segs, (ss,nd)=>{ if(nd.t==='f') entries.push({ p: ss.slice(segs.length-1).join('/'), c: nd.c }); });
+  }
+  vfs.TAR[name] = entries;
+  vfs.writeFile(name, '\u2020zip-archive-data', false, io.sudo);
+  return { out: '  adding: '+rest.slice(1).join(' ')+' (deflated 62%)' };
+});
+def('unzip', 'استخراج آرشیو zip', 'unzip arch.zip [-d dir]', (a, io)=>{
+  const rest = a.filter(x=>!x.startsWith('-') && x !== '-d');
+  const dIdx = a.indexOf('-d');
+  const dest = dIdx > -1 ? a[dIdx+1] : '.';
+  let name = rest[0];
+  if(!name) return { err: 'unzip: usage: unzip archive.zip' };
+  if(!/\.zip$/.test(name)) name += '.zip';
+  const t = vfs.TAR[name];
+  if(!t) return { err: 'unzip: cannot find or open '+name+', '+name+'.zip or '+name+'.ZIP' };
+  for(const e of t){
+    if(e.p.endsWith('/')) vfs.mkdir(dest+'/'+e.p.replace(/\/$/,''), true, io.sudo);
+    else vfs.writeFile(dest+'/'+e.p, e.c || '', false, io.sudo);
+  }
+  return { out: 'Archive:  '+name+'\n'+t.map(e=>'  inflating: '+e.p).join('\n') };
+});
+
+/* ============ Shell scripts ============ */
+function runScript(src, args){
+  const vars = {};
+  if(args && args.length){ args.forEach((v,i)=> vars[String(i+1)] = v); }
+  const lines = src.replace(/\r/g,'').split('\n');
+  const outAll = [];
+  function subst(s){
+    return String(s).replace(/\$\{(\w+)\}|\$(\w+)/g, (m,a,b)=>{
+      const k = a || b;
+      if(k === '0') return 'script.sh';
+      if(k === 'HOME') return S.home;
+      if(k === 'USER') return S.user;
+      if(k === 'PWD') return vfs.cwd;
+      const v = (k in vars) ? vars[k] : S.vars[k];
+      return v == null ? '' : v;
+    });
+  }
+  function unq(x){ return x.replace(/^"(.*)"$/,'$1').replace(/^'(.*)'$/,'$1'); }
+  function cond(c){
+    c = c.trim();
+    if(c.startsWith('[')) c = c.slice(1);
+    if(c.endsWith(']')) c = c.slice(0, -1);
+    c = c.trim();
+    const toks = c.split(/\s+/).map(x=>unq(subst(x)));
+    const P = p => vfs.getNode(p);
+    switch(toks[0]){
+      case '-f': return !!P(toks[1]) && P(toks[1]).t === 'f';
+      case '-d': return !!P(toks[1]) && P(toks[1]).t === 'd';
+      case '-e': return !!P(toks[1]);
+      case '-z': return (toks[1]||'') === '';
+      case '-n': return (toks[1]||'') !== '';
+    }
+    if(toks[1] === '==') return toks[0] === toks[2];
+    if(toks[1] === '!=') return toks[0] !== toks[2];
+    if(toks[1] === '-eq') return Number(toks[0]) === Number(toks[2]);
+    if(toks[1] === '-gt') return Number(toks[0]) > Number(toks[2]);
+    if(toks[1] === '-lt') return Number(toks[0]) < Number(toks[2]);
+    if(toks[1] === '-ge') return Number(toks[0]) >= Number(toks[2]);
+    if(toks[1] === '-le') return Number(toks[0]) <= Number(toks[2]);
+    return false;
+  }
+  function findPair(start, openRe, closeRe){
+    let d = 0;
+    for(let i=start;i<lines.length;i++){
+      const l = lines[i].trim();
+      if(d > 0 && new RegExp(closeRe).test(l)){ d--; if(d === 0) return i; continue; }
+      if(new RegExp(openRe).test(l)) d++;
+    }
+    return -1;
+  }
+  function execBlock(from, to){
+    let i = from;
+    while(i < to){
+      const line = lines[i].trim();
+      if(!line || line.startsWith('#')){ i++; continue; }
+      const mIf = line.match(/^if\s+(.+?)\s*;\s*then\s*$/);
+      if(mIf){
+        const endFi = findPair(i, '^if\\b', '^fi\\b');
+        if(endFi === -1){ outAll.push('bash: syntax error: missing fi'); return; }
+        let elseIdx = -1, d = 0;
+        for(let k=i+1;k<endFi;k++){
+          const l = lines[k].trim();
+          if(/^if\b/.test(l)) d++;
+          else if(/^fi\b/.test(l)) d--;
+          else if(d === 0 && (/^else\b/.test(l) || /^elif\b/.test(l))){ elseIdx = k; break; }
+        }
+        const ok = cond(mIf[1]);
+        if(ok) execBlock(i+1, elseIdx === -1 ? endFi : elseIdx);
+        else if(elseIdx !== -1) execBlock(elseIdx+1, endFi);
+        i = endFi + 1; continue;
+      }
+      const mFor = line.match(/^for\s+(\w+)\s+in\s+(.+?)\s*;\s*do\s*$/);
+      if(mFor){
+        const end = findPair(i, '^for\\b', '^done\\b');
+        if(end === -1){ outAll.push('bash: syntax error: missing done'); return; }
+        let words = subst(mFor[2]).trim().split(/\s+/);
+        const globbed = [];
+        for(const w of words){
+          if(/[*?]/.test(w)){
+            const re = globToRe(w);
+            const dn = vfs.getNode(vfs.cwd);
+            const match = vfs.entryList(dn, false).filter(k=>re.test(k));
+            globbed.push(...(match.length ? match : [w]));
+          } else globbed.push(w);
+        }
+        for(const w of globbed){ vars[mFor[1]] = unq(w); execBlock(i+1, end); }
+        i = end + 1; continue;
+      }
+      const mA = line.match(/^([A-Za-z_]\w*)=(.*)$/);
+      if(mA){ vars[mA[1]] = unq(subst(mA[2])); i++; continue; }
+      const r = execStage(line, null, false, vars);
+      if(r.err) outAll.push(r.err);
+      else if(r.out != null && r.out !== '') outAll.push(r.out.replace(/\n$/,''));
+      i++;
+    }
+  }
+  execBlock(0, lines.length);
+  return { out: outAll.join('\n') };
+}
+def('bash', 'اجرای اسکریپت بش', 'bash script.sh [args]', (a, io)=>{
+  if(!a.length) return { out: 'bash: در شبیه‌سازی، دستورها را همین‌جا در ترمینال اجرا کنید :)' };
+  const p = a[0];
+  const n = vfs.getNode(p);
+  if(!n) return { err: 'bash: '+p+': No such file or directory' };
+  if(n.t === 'd') return { err: 'bash: '+p+': Is a directory' };
+  return runScript(n.c, a.slice(1));
+});
+defAlias('sh','bash');
+def('source', 'اجرای اسکریپت در همین شل', 'source script.sh', (a, io)=>{
+  if(!a.length) return { err: 'source: filename argument required' };
+  const n = vfs.getNode(a[0]);
+  if(!n || n.t !== 'f') return { err: 'source: '+a[0]+': No such file or directory' };
+  return runScript(n.c, []);
+});
+
+/* ============ Gated fun commands ============ */
+const TREE_IMPL = CMDS.tree ? CMDS.tree.run : null;
+function gate(name, fn){ def(name, CATALOG[name] || name, name, (a, io)=>{
+  if(!S.installed.has(name)) return { err: name+': command not found\n(راهنمایی: اول نصبش کنید: sudo apt install '+name+')' };
+  return fn(a, io);
+}); }
+if(TREE_IMPL) gate('tree', (a,io)=>TREE_IMPL(a,io));
+gate('htop', ()=>CMDS.top.run([], {}));
+gate('neofetch', ()=>{
+  const info = [
+    S.user+'@'+S.host,
+    '-----------------',
+    'OS: Linux Academy OS 22.04 LTS x86_64',
+    'Kernel: 5.15.0-academy',
+    'Shell: bash 5.1',
+    'Terminal: Academy Sim',
+    'CPU: Academy Virtual Core (8)',
+    'Memory: 1430MiB / 3987MiB'
+  ];
+  const logo = [
+    '        .--.        ',
+    '       |o_o |       ',
+    '       |:_/ |       ',
+    '      //   \\ \\      ',
+    '     (|     | )     ',
+    "    /'\\_   _/`\\     ",
+    '    \\___)=(___/     '
+  ];
+  const rows = [];
+  for(let i=0;i<Math.max(logo.length, info.length);i++){
+    rows.push('<span class="t-ok">'+(logo[i]||' '.repeat(20))+'</span>  <span style="color:#7dd3fc">'+(info[i]||'')+'</span>');
+  }
+  return { html: rows.join('\n'), out: (logo.map((l,i)=>l+'  '+(info[i]||'')).join('\n')) };
+});
+gate('cowsay', (a)=>{
+  const msg = a.join(' ') || 'Moo! Linux is fun!';
+  const top = ' '+'_'.repeat(msg.length+2);
+  const bot = ' '+'-'.repeat(msg.length+2);
+  return { out: top+'\n< '+msg+' >\n'+bot+'\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||' };
+});
+gate('sl', ()=>({ out: '      ====        ________                ___________\n  _D _|  |_______/        \\__I_I_____===__|_________|\n   |(_)---  |   H\\________/ |   |        =|___ ___|\n   /     |  |   H  |  |     |   |         ||_| |_||\n  |      |  |   H  |__--------------------| [___] |\n  | ________|___H__/__|_____/[][]~\\_______|       |\n  |/ |   |-----------I_____I [][] []  D   |=======|__' }));
+
+/* ============ Shell builtins ============ */
+def('clear', 'پاک کردن صفحه ترمینال', 'clear', ()=>({ action:'clear' }));
+def('exit', 'خروج (نمایشی)', 'exit', ()=>({ action:'exit', out: 'logout\n(شبیه‌سازی همچنان فعال است — می‌توانید به تمرین ادامه دهید)' }));
+def('help', 'نمایش راهنمای دستورها', 'help', ()=>{
+  const groups = {
+    '🧭 ناوبری': ['pwd','ls','cd','tree'],
+    '📁 فایل‌ها': ['touch','mkdir','rmdir','cp','mv','rm'],
+    '📄 مشاهده': ['cat','less','head','tail','wc','echo','nano'],
+    '🔍 جستجو': ['grep','find','which','file'],
+    '🔀 پایپ و متن': ['sort','uniq'],
+    '🔐 دسترسی': ['chmod','chown'],
+    '👤 کاربران': ['whoami','id','groups','useradd','passwd','su','sudo'],
+    '⚙️ سیستم': ['uname','hostname','date','uptime','df','du','free','cal','env','export','history'],
+    '🧮 پروسه‌ها': ['ps','top','jobs','sleep','kill'],
+    '📦 بسته‌ها': ['apt'],
+    '🌐 شبکه': ['ping','curl','wget','ip','ifconfig'],
+    '🗜️ آرشیو': ['tar','gzip','gunzip','zip','unzip'],
+    '📜 اسکریپت': ['bash','source'],
+    '🧹 شل': ['clear','exit','man','help']
+  };
+  let html = '<span class="t-ok">🧰 دستورهای موجود در شبیه‌ساز — گروه‌بندی‌شده:</span>\n\n';
+  for(const g in groups){
+    html += '<span class="t-info">'+g+':</span>  ';
+    html += groups[g].filter(c=>CMDS[c]).map(c=>'<span style="color:#7ee7c0">'+c+'</span>').join('  ·  ') + '\n';
+  }
+  html += '\n<span class="t-dim">راهنمای هر دستور: man &lt;دستور&gt; · مثال: man ls</span>';
+  const out = Object.keys(groups).map(g=>g+': '+groups[g].filter(c=>CMDS[c]).join(' · ')).join('\n');
+  return { html, out };
+});
+def('man', 'راهنمای دستورها', 'man دستور', (a)=>{
+  const c = a[0];
+  if(!c) return { err: 'What manual page do you want?\n(مثال: man ls)' };
+  const e = CMDS[c];
+  if(!e) return { err: 'No manual entry for '+c };
+  return { out:
+'NAME\n    '+c+' — '+e.d+'\n\n'+
+'SYNOPSIS\n    '+e.m+'\n\n'+
+'DESCRIPTION\n    '+e.d+'.\n    در این شبیه‌ساز می‌توانید همین حالا دستور را اجرا کنید و نتیجه را ببینید.' };
+});
+def('nano', 'ویرایشگر متن nano', 'nano نام‌فایل', (a)=>{
+  if(!a.length) return { err: 'nano: نام فایل را بنویسید — مثال: nano notes.txt' };
+  return { action: 'nano', path: a[0], out: '' };
+});
+def('vim', 'ویرایشگر vim (جوک!', 'vim', ()=>({ err: 'vim: در شبیه‌سازی پشتیبانی نمی‌شود — هیچ‌کس نمی‌داند چطور از vim خارج شود! 😄\nاز nano استفاده کنید: nano نام‌فایل' }));
+defAlias('vi','vim');
+
+/* ============ Dispatcher ============ */
+function dispatch(cmd, args, io){
+  /* direct path execution: ./script.sh, ../x.sh, /path/to.sh */
+  if(/^(\.\/|\.\.\/|\/)/.test(cmd)){
+    const n = vfs.getNode(cmd);
+    if(!n) return { err: 'bash: '+cmd+': No such file or directory' };
+    if(n.t === 'd') return { err: 'bash: '+cmd+': Is a directory' };
+    if(!n.m || n.m[2] !== 'x') return { err: 'bash: '+cmd+': Permission denied\n(راهنمایی: اول اجرایی‌اش کنید: chmod +x '+cmd+')' };
+    return runScript(n.c, args);
+  }
+  let c = cmd.toLowerCase();
+  if(ALIAS[c]) c = ALIAS[c];
+  if(GATED[c] && !S.installed.has(c))
+    return { err: c+': command not found\n(راهنمایی: اول نصبش کنید: sudo apt install '+c+')' };
+  const e = CMDS[c];
+  if(!e) return { err: c+': command not found\n(راهنمایی: دستور help را امتحان کنید)' };
+  try {
+    const r = e.run(args, io) || { out: '' };
+    r.redir = io.redir;
+    return r;
+  } catch(err){
+    return { err: c+': internal simulation error: '+err.message };
+  }
+}
+function writeRedirect(redir, result, sudo){
+  let text = result.out != null ? result.out : (result.html ? result.html.replace(/<[^>]+>/g,'') : '');
+  if(text && !text.endsWith('\n')) text += '\n';
+  const r = vfs.writeFile(redir.file, text, redir.mode === '>>', sudo);
+  return r.err ? { err: 'bash: '+redir.file+': '+r.err.split(': ').pop() } : null;
+}
+function execStage(str, stdin, sudo, vars){
+  const { toks, sq } = tokenize(str);
+  const ex = toks.map((t,i)=> sq[i] ? t : expandVars(t, vars));
+  const { args, redir, inFile } = parseRedirect(ex);
+  if(!args.length) return { out: '' };
+  let text = stdin;
+  if(inFile){
+    const n = vfs.getNode(inFile);
+    if(!n) return { err: 'bash: '+inFile+': No such file or directory' };
+    if(n.t === 'd') return { err: 'bash: '+inFile+': Is a directory' };
+    text = n.c;
+  }
+  let c = args[0], rest = args.slice(1);
+  if(c === 'sudo'){
+    sudo = true;
+    rest = args.slice(1);
+    c = rest[0]; rest = rest.slice(1);
+    if(!c) return { err: 'usage: sudo <command>' };
+  }
+  const io = { stdin: text, sudo, vars };
+  const res = dispatch(c, rest, io);
+  res.redir = redir;
+  if(res.err) return res;
+  if(redir){
+    const werr = writeRedirect(redir, res, sudo);
+    if(werr) return werr;
+    return { out: '', silent: true };
+  }
+  return res;
+}
+/* Execute a full command line; returns array of output items for the UI */
+function execLine(line){
+  const items = [];
+  const trimmed = line.trim();
+  if(!trimmed) return items;
+  S.history.push(trimmed);
+  const asg = trimmed.match(/^([A-Za-z_]\w*)=(.*)$/);
+  if(asg && !trimmed.includes(' if ') && !/^if\s/.test(trimmed)){
+    S.vars[asg[1]] = unquote(asg[2]);
+    items.push({ type:'ok' });
+    return items;
+  }
+  const bg = /&\s*$/.test(trimmed);
+  const body = bg ? trimmed.replace(/&\s*$/,'').trim() : trimmed;
+  const ands = splitTop(body, '&&');
+  for(const part of ands){
+    const stages = splitTop(part, '|').map(s=>s.trim()).filter(Boolean);
+    let stdin = null, last = null, aborted = false;
+    for(let si=0; si<stages.length; si++){
+      last = execStage(stages[si], stdin, false, null);
+      if(last.err){ items.push({ type:'err', text: last.err }); aborted = true; break; }
+      if(last.action){ items.push({ type: last.action, path: last.path, text: last.out }); if(last.action !== 'clear') aborted = true; if(last.action==='clear'){ /* continue */ } break; }
+      stdin = last.out != null ? last.out : '';
+    }
+    if(aborted) continue;
+    if(last){
+      if(bg){
+        const pid = ++S.pid;
+        const isSleep = /^sleep\b/.test(stages[0]);
+        const job = { pid, cmd: stages[0], state: isSleep ? 'Running' : 'Done' };
+        S.jobs.push(job);
+        if(isSleep) setTimeout(()=>{ job.state = 'Done'; }, (parseFloat(stages[0].split(/\s+/)[1])||1)*1000);
+        items.push({ type:'out', text: '['+S.jobs.length+'] '+pid });
+      } else {
+        if(last.html != null) items.push({ type:'html', html: last.html });
+        else if(last.out != null && last.out !== '') items.push({ type:'out', text: last.out });
+        else items.push({ type:'ok' });
+      }
+    }
+  }
+  return items;
+}
+/* ============================================================
+   فصل‌های آموزشی — بخش ۱ (فصل ۱ تا ۵)
+   ============================================================ */
+const CHAPTERS = [];
+
+CHAPTERS.push({
+  id: 'c1', icon: '🐧', title: 'آشنایی با لینوکس و ترمینال', sub: 'قبل از فشار دادن هر کلیدی، بفهمیم ترمینال چیست و چرا تمام حرفه‌ای‌های دنیای IT به آن عشق می‌ورزند.',
+  sections: [
+    { h: 'لینوکس چیست و کجاست؟',
+      p: [
+        'لینوکس یک سیستم‌عامل متن‌باز است؛ یعنی هسته (Kernel) آن آزادانه در دسترس همه است و هزاران برنامه‌نویس سراسر دنیا در بهبود آن مشارکت می‌کنند. چیزی که اکثر مردم نمی‌دانند این است که لینوکس همه‌جا حضور دارد: از سرورهای گوگل و آمازون و Netflix گرفته تا اندروید گوشی شما، تلویزیون‌های هوشمند، ماشین‌ها و حتی ابزاردهی ناسا در ماموریت‌های فضایی.',
+        'بیش از ۹۶ درصد از یک میلیون سرور برتر دنیا با لینوکس کار می‌کنند و بزرگترین شرکت‌های فناوری جهان روزانه میلیون‌ها دلار روی زیرساخت لینوکسی سرمایه‌گذاری می‌کنند. به همین دلیل، تسلط بر لینوکس یکی از پرتقاضاترین مهارت‌ها برای مدیران سیستم، برنامه‌نویسان، متخصصان DevOps، متخصصان امنیت و حتی کارشناسان داده است.'
+      ] },
+    { h: 'ترمینال چیست و چرا از آن استفاده می‌کنیم؟',
+      p: [
+        'ترمینال (که به آن خط فرمان، شل، کنسول یا Command Line هم می‌گویند) یک رابط متنی برای گفتگو با سیستم‌عامل است. شما یک دستور تایپ می‌کنید، سیستم اجرایش می‌کند و نتیجه را به شما نشان می‌دهد. در محیط گرافیکی برای ساختن یک پوشه چند بار کلیک می‌کنید؛ اما در ترمینال فقط یک دستور کوتاه می‌زنید.',
+        'قدرت واقعی ترمینال در سه چیز است: سرعت (انجام کارها چند برابر سریع‌تر)، خودکارسازی (نوشتن اسکریپت برای اجرای صدها کار با یک فرمان) و دسترسی از راه دور (مدیریت سرورهایی که حتی محیط گرافیکی ندارند). هر سرور واقعی در دنیا روزی هزاران بار از طریق ترمینال مدیریت می‌شود.'
+      ] },
+    { h: 'ساختار خط فرمان (Prompt) را بشناسید',
+      p: [
+        'وقتی ترمینال را باز می‌کنید چیزی شبیه به student@linux-academy:~$ می‌بینید. این خط که به آن Prompt می‌گوییم، یعنی «سیستم آماده است، دستور شما را بفرست». بخش اول نام کاربر شما (student)، بخش دوم نام دستگاه (linux-academy) و بخش سوم مسیر فعلی شما (~ به معنی پوشه خانه) است.',
+        'علامت دلار ($) یعنی شما کاربر عادی هستید؛ اگر علامت شارپ (#) ببینید یعنی با دسترسی مدیر (root) کار می‌کنید. بعد از این علامت، مکان‌نمای چشمک‌زن منتظر دستور شماست. هر دستوری که می‌نویسید باید با کلید Enter تایید شود تا اجرا شود.'
+      ],
+      code: 'student@linux-academy:~$ whoami\nstudent          ← نام کاربر فعلی\nstudent@linux-academy:~$ echo "Hello Linux!"\nHello Linux!' },
+    { h: 'از کجا کمک بگیریم؟ help و man',
+      p: [
+        'هیچ‌کس حافظه‌ی همه دستورها را ندارد و نیازی هم نیست داشته باشد! دو ابزار عالی برای کمک گرفتن وجود دارد: دستور help فهرست دستورهای موجود را نشان می‌دهد و دستور man (مخفف Manual) دفترچه راهنمای کامل هر دستور را باز می‌کند.',
+        'مثلا با اجرای man ls می‌توانید همه گزینه‌های دستور ls را با توضیح کامل ببینید. در این آموزش هم هر وقت خواستید بدانید چه دستورهایی در اختیار دارید، کافی است help را اجرا کنید. اگر سند راهنمای دستوری را دیدید، با حرف q می‌توانید از آن خارج شوید.'
+      ],
+      code: '$ help      ← فهرست دستورهای موجود\n$ man ls    ← دفترچه راهنمای دستور ls' }
+  ],
+  cmds: [
+    { c: 'help', d: 'نمایش فهرست همه دستورهای موجود در ترمینال' },
+    { c: 'man ls', d: 'دیدن دفترچه راهنمای هر دستور' },
+    { c: 'whoami', d: 'نمایش نام کاربر فعلی' },
+    { c: 'date', d: 'نمایش تاریخ و ساعت سیستم' },
+    { c: 'echo "Hello!"', d: 'چاپ متن در خروجی ترمینال' },
+    { c: 'clear', d: 'پاک کردن صفحه ترمینال' },
+    { c: 'history', d: 'نمایش تاریخچه دستورهای اجرا شده' }
+  ],
+  tip: 'با کلیدهای بالا و پایین (↑ ↓) می‌توانید بین دستورهای قبلی که زده‌اید حرکت کنید؛ دیگر نیازی به تایپ مجدد نیست. این یعنی بهره‌وری واقعی!',
+  warn: 'در ترمینال معمولا دستورها به حروف بزرگ و کوچک حساس (Case-Sensitive) هستند؛ Ls با ls یکی نیست و دومی درست است.',
+  tasks: [
+    { id: 'c1t1', t: 'دستور help را اجرا کنید تا با فهرست دستورهای موجود آشنا شوید.', chk: x => x.ran(/^help\s*$/) },
+    { id: 'c1t2', t: 'راهنمای یک دستور را با man ببینید — مثلا man ls را اجرا کنید.', chk: x => x.ran(/^man\s+\S+/) },
+    { id: 'c1t3', t: 'با whoami نام کاربر فعلی را نمایش دهید.', chk: x => x.ran(/^whoami\s*$/) },
+    { id: 'c1t4', t: 'تاریخ و ساعت سیستم را با دستور date ببینید.', chk: x => x.ran(/^date\s*$/) },
+    { id: 'c1t5', t: 'تاریخچه دستورهای خود را با history بررسی کنید.', chk: x => x.ran(/^history\s*$/) },
+    { id: 'c1t6', t: 'در پایان، صفحه ترمینال را با clear پاک کنید.', chk: x => x.ran(/^clear\s*$/) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c2', icon: '🧭', title: 'ناوبری در سیستم فایل', sub: 'اولین مهارت واقعی: رفتن به هر نقطه از سیستم با سه دستور قدرتمند pwd ،ls و cd.',
+  sections: [
+    { h: 'سیستم فایل لینوکس یک درخت است',
+      p: [
+        'در لینوکس همه‌چیز از یک نقطه شروع می‌شود: ریشه (Root) که با علامت / نمایش داده می‌شود. برخلاف ویندوز که درایوهای C و D داریم، در لینوکس فقط یک درخت واحد وجود دارد و همه دیسک‌ها و تجهیزات زیر این درخت نصب می‌شوند. مسیر هر فایل مثل آدرس پستی است: مثلا /home/student/documents یعنی از ریشه وارد home شوید، بعد student و بعد documents.',
+        'چند پوشه کلیدی که باید بشناسید: home/ (خانه کاربران)، etc/ (فایل‌های تنظیمات سیستم)، var/ (داده‌های متغیر مثل لاگ‌ها)، tmp/ (فایل‌های موقت) و usr/ (برنامه‌های نصب‌شده). در طول این دوره بارها با آن‌ها کار خواهید کرد.'
+      ],
+      code: '/                    ← ریشه درخت (Root)\n├── home/            ← خانه‌ی کاربران\n│   └── student/     ← پوشه شخصی شما (~)\n│       ├── documents/\n│       ├── downloads/\n│       └── projects/\n├── etc/             ← تنظیمات سیستم\n├── var/             ← لاگ‌ها و داده‌های متغیر\n└── tmp/             ← فایل‌های موقت' },
+    { h: 'pwd — من کجای سیستم هستم؟',
+      p: [
+        'دستور pwd (مخفف Print Working Directory) مسیر کامل پوشه‌ای که الان داخلش هستید را نشان می‌دهد. این دستور را همیشه می‌توانید به عنوان «قطب‌نمای ترمینال» به کار ببرید؛ مخصوصا وقتی بین پوشه‌های مختلف جابه‌جا شده‌اید و نمی‌دانید کجا ایستاده‌اید.',
+        'ترمینال در Prompt خود هم مسیر فعلی را نشان می‌دهد؛ ولی وقتی مسیر خیلی طولانی باشد یا داخل مسیرهای پیچیده کار کنید، pwd مطمئن‌ترین مرجع است.'
+      ] },
+    { h: 'ls — چه چیزهایی اینجا هست؟',
+      p: [
+        'دستور ls (مخفف List) محتوای پوشه فعلی یا هر پوشه دیگری را فهرست می‌کند. اما قدرت واقعی ls در گزینه‌های (Flags) آن است: با ls -l اطلاعات کامل هر فایل (دسترسی‌ها، مالک، حجم، تاریخ) را می‌بینید، با ls -a فایل‌های مخفی (آن‌هایی که با نقطه شروع می‌شوند مثل ‎.bashrc) هم نمایش داده می‌شوند و با ls -lh حجم فایل‌ها به صورت خوانا (K، M، G) نشان داده می‌شود.',
+        'می‌توانید چند گزینه را با هم ترکیب کنید: ‎ls -la یعنی هم لیست کامل بده هم فایل‌های مخفی را نشان بده. حتی می‌توانید مستقیم مسیر بدهید: ls /etc محتوای پوشه تنظیمات را بدون اینکه به آنجا بروید نشان می‌دهد.'
+      ],
+      code: '$ ls\ndocuments  downloads  pictures  projects  welcome.txt\n$ ls -a\n.  ..  .bashrc  .profile  documents  ... \n$ ls /etc       ← دیدن محتوای /etc بدون جابه‌جایی' },
+    { h: 'cd — جابه‌جایی آزاد در سیستم',
+      p: [
+        'دستور cd (مخفف Change Directory) شما را به هر پوشه‌ای می‌برد. دو نوع مسیر وجود دارد: مسیر مطلق که از ریشه شروع می‌شود (مثل cd /etc) و مسیر نسبی که از موقعیت فعلی شما حساب می‌شود (مثل cd documents وقتی داخل خانه هستید).',
+        'سه میانبر طلایی را حفظ کنید: cd ~ یا cd تنها شما را به پوشه خانه برمی‌گرداند؛ cd .. یک پوشه به عقب برمی‌گردد؛ و در حرف‌زدنی‌های حرفه‌ای‌ها علامت ~ همیشه یعنی «خانه من». با ترکیب این ابزارها می‌توانید در چند ثانیه به هر جای سیستم بروید.'
+      ],
+      code: '$ cd /etc      ← مسیر مطلق (از ریشه)\n$ cd ..        ← برگشت یک پله به عقب\n$ cd ~         ← بازگشت به خانه (~)\n$ cd documents ← مسیر نسبی (از همین‌جا)' }
+  ],
+  cmds: [
+    { c: 'pwd', d: 'نمایش مسیر پوشه فعلی' },
+    { c: 'ls', d: 'فهرست محتوای پوشه فعلی' },
+    { c: 'ls -l', d: 'فهرست با جزئیات کامل (دسترسی، مالک، حجم، تاریخ)' },
+    { c: 'ls -a', d: 'نمایش همه فایل‌ها شامل فایل‌های مخفی' },
+    { c: 'ls -lh', d: 'فهرست با حجم خوانا برای انسان' },
+    { c: 'cd /etc', d: 'رفتن به پوشه etc با مسیر مطلق' },
+    { c: 'cd ..', d: 'برگشت به پوشه قبلی (یک سطح بالاتر)' },
+    { c: 'cd ~', d: 'بازگشت سریع به پوشه خانه' },
+    { c: 'ls ~', d: 'دیدن محتوای خانه از هر کجا' }
+  ],
+  tip: 'دکمه Tab در ترمینال، اسم فایل‌ها و دستورها را خودکار کامل می‌کند! فقط چند حرف اول را بنویسید و Tab را بزنید. این عادت کوچک سرعت شما را چند برابر می‌کند و از غلط تایپی هم جلوگیری می‌کند.',
+  tasks: [
+    { id: 'c2t1', t: 'با دستور pwd مسیر فعلی خود را نمایش دهید.', chk: x => x.ran(/^pwd\s*$/) },
+    { id: 'c2t2', t: 'محتوای ریشه سیستم را ببینید: ls /', chk: x => x.ran(/^ls\s+(-\w+\s+)*\/\s*$/) },
+    { id: 'c2t3', t: 'به پوشه تنظیمات بروید (cd /etc) و محتوای آن را فهرست کنید.', chk: x => x.ran(/^cd\s+\/etc\/?\s*$/) && x.ran(/^ls/) },
+    { id: 'c2t4', t: 'فایل‌های مخفی پوشه خانه را با ls -a ببینید.', chk: x => x.ran(/^ls\s+(-\w*a\w*\s+)*/) },
+    { id: 'c2t5', t: 'جزئیات کامل فایل‌های پوشه documents را با ls -l ببینید (ls -l documents).', chk: x => x.ran(/^ls\s+-\w*l\w*\s+\S*documents\S*\s*$/) || (x.ran(/^ls\s+-\w*l\w*\s*$/) && x.hist.some(h=>/^cd\s+\S*documents/.test(h))) },
+    { id: 'c2t6', t: 'با یک دستور ساده به پوشه خانه برگردید (cd یا cd ~).', chk: x => x.ran(/^cd\s*(~|\/home\/\w+)?\s*$/) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c3', icon: '📁', title: 'مدیریت فایل‌ها و پوشه‌ها', sub: 'ساختن، کپی کردن، جابه‌جا کردن و حذف کردن — کارهای روزانه‌ای که هر روز ده‌ها بار انجام می‌دهید.',
+  sections: [
+    { h: 'ساختن: touch و mkdir',
+      p: [
+        'دستور touch یک فایل خالی می‌سازد: touch readme.txt. اگر فایل از قبل وجود داشته باشد، touch فقط زمان آخرین تغییر آن را به‌روزرسانی می‌کند و محتوایش را خراب نمی‌کند — همین خاصیت باعث می‌شود برای «لمس» و به‌روزرسانی زمان فایل‌ها هم استفاده شود.',
+        'برای ساخت پوشه از mkdir استفاده می‌کنیم: mkdir projects یک پوشه می‌سازد. اما اگر بخواهید یک ساختار تو‌در‌تو بسازید (مثلا projects/2024/reports که هیچ‌کدام از پدرهایش وجود ندارند)، باید از گزینه p- استفاده کنید: mkdir -p projects/2024/reports همه مسیر لازم را یک‌جا می‌سازد. بدون p- خطای «No such file or directory» می‌گیرید.'
+      ],
+      code: '$ touch readme.txt\n$ mkdir projects\n$ mkdir -p projects/2024/reports   ← ساخت تو‌در‌تو' },
+    { h: 'کپی و جابه‌جایی: cp و mv',
+      p: [
+        'دستور cp دو آرگومان می‌گیرد: اول مبدأ، بعد مقصد. cp welcome.txt documents یعنی فایل welcome را داخل پوشه documents کپی کن. برای کپی پوشه‌ها حتما باید گزینه r- (مخفف recursive) را بدهید تا کل محتوای پوشه با همه زیرپوشه‌ها کپی شود؛ در غیر این صورت لینوکس خطای «omitting directory» می‌دهد.',
+        'دستور mv دو کار متفاوت انجام می‌دهد: انتقال فایل از پوشه‌ای به پوشه دیگر و تغییر نام! اگر مقصد اسم جدیدی باشد، mv در واقع rename می‌کند. نکته مهم: mv برای پوشه‌ها به r- نیاز ندارد چون خودش همه‌چیز را جابه‌جا می‌کند.'
+      ],
+      code: '$ cp welcome.txt documents/    ← کپی فایل به پوشه\n$ cp report.txt report-backup.txt ← کپی با اسم جدید\n$ cp -r projects projects-backup  ← کپی کل پوشه\n$ mv report-backup.txt documents/ ← انتقال\n$ mv report.txt new-report.txt    ← تغییر نام' },
+    { h: 'حذف: rm — قدرت و مسئولیت',
+      p: [
+        'دستور rm فایل‌ها را حذف می‌کند: rm oldfile.txt. برای حذف پوشه‌های غیرخالی باید r- را اضافه کنید: rm -r oldfolder. گزینه f- (force) حذف را بدون پرسیدن سوال انجام می‌دهد و خطاها را هم نادیده می‌گیرد؛ ترکیب معروف rf- یعنی «حذف کامل و بی‌سوال».',
+        'اینجا مهم‌ترین هشدار کل دوره است: در ترمینال واقعی، سطل بازیافت (Recycle Bin) وجود ندارد! چیزی که با rm حذف می‌شود، برای همیشه می‌رود. هرگز دستور rm -rf را روی مسیرهایی که مطمئن نیستید اجرا نکنید و هرگز هرگز rm -rf / را اجرا نکنید — این معروف‌ترین دستور مخرب دنیاست که کل سیستم را نابود می‌کند.'
+      ],
+      code: '$ rm oldfile.txt          ← حذف فایل\n$ rm -r oldfolder         ← حذف پوشه (با محتوا)\n$ rm -rf tmp-data         ← حذف سریع و بی‌سوال ⚠️' }
+  ],
+  cmds: [
+    { c: 'touch new.txt', d: 'ساخت فایل خالی جدید' },
+    { c: 'mkdir photos', d: 'ساخت پوشه جدید' },
+    { c: 'mkdir -p a/b/c', d: 'ساخت ساختار تو‌در‌تو یک‌جا' },
+    { c: 'cp file.txt backup.txt', d: 'کپی فایل' },
+    { c: 'cp -r folder folder2', d: 'کپی کامل یک پوشه' },
+    { c: 'mv file.txt /tmp/', d: 'انتقال فایل به پوشه دیگر' },
+    { c: 'mv old.txt new.txt', d: 'تغییر نام فایل' },
+    { c: 'rm file.txt', d: 'حذف فایل' },
+    { c: 'rm -r folder', d: 'حذف پوشه با همه محتویات' },
+    { c: 'rmdir empty-folder', d: 'حذف پوشه خالی (فقط خالی!)' }
+  ],
+  warn: 'در ترمینال واقعی حذف یعنی حذف برای همیشه! قبل از اجرای rm با r- دو بار مسیر را چک کنید. عادت حرفه‌ای‌ها: اول ls بزنید تا مطمئن شوید درست همان چیزی را پاک می‌کنید که باید.',
+  tip: 'می‌توانید چند فایل را یک‌جا حذف یا کپی کنید: rm file1.txt file2.txt file3.txt. در فصل‌های بعدی با علامت * (wildcard) این کار را حرفه‌ای‌تر هم می‌کنیم.',
+  tasks: [
+    { id: 'c3t1', t: 'در پوشه خانه، یک پوشه به نام myprojects بسازید.', chk: x => x.isDir('~/myprojects') },
+    { id: 'c3t2', t: 'داخل myprojects یک فایل خالی به نام readme.txt بسازید (touch ~/myprojects/readme.txt).', chk: x => x.isFile('~/myprojects/readme.txt') },
+    { id: 'c3t3', t: 'فایل welcome.txt را از خانه به داخل myprojects کپی کنید.', chk: x => x.isFile('~/myprojects/welcome.txt') },
+    { id: 'c3t4', t: 'نام فایل readme.txt را به intro.txt تغییر دهید (mv).', chk: x => x.isFile('~/myprojects/intro.txt') },
+    { id: 'c3t5', t: 'با یک دستور mkdir -p ساختار tmp1/tmp2/tmp3 را بسازید.', chk: x => x.isDir('~/tmp1/tmp2/tmp3') },
+    { id: 'c3t6', t: 'حالا کل پوشه tmp1 را با rm -r حذف کنید.', chk: x => !x.exists('~/tmp1') && x.hist.some(h=>/\brm\b/.test(h) && /tmp1/.test(h)) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c4', icon: '📄', title: 'مشاهده و ویرایش فایل‌ها', sub: 'بدون باز کردن برنامه گرافیکی، محتوای هر فایلی را بخوانید، شمارش کنید و ویرایش کنید.',
+  sections: [
+    { h: 'خواندن فایل‌ها: cat و دوستانش',
+      p: [
+        'دستور cat (مخفف concatenate) کل محتوای یک فایل را روی صفحه می‌ریزد — بهترین گزینه برای فایل‌های کوتاه مثل تنظیمات و یادداشت‌ها. اما اگر فایل چند هزار خطی باشد، خروجی مثل آبشار از جلوی چشم شما رد می‌شود! اینجاست که دو ابزار دیگر به کمک می‌آیند.',
+        'head فقط چند خط اول فایل را نشان می‌دهد (پیش‌فرض ۱۰ خط) و tail چند خط آخر را. با گزینه n- تعداد خطوط دلخواه را تعیین می‌کنید: head -n 5 report.txt یعنی ۵ خط اول. tail یک قدرت مخفی هم دارد: با f- فایل را زنده دنبال می‌کند — ابزار اصلی همه مدیران سیستم برای تماشای زنده لاگ‌ها.'
+      ],
+      code: '$ cat welcome.txt        ← نمایش کل فایل\n$ head -n 5 report.txt   ← ۵ خط اول\n$ tail -n 3 notes.md     ← ۳ خط آخر\n$ tail -f /var/log/app.log ← تماشای زنده لاگ (در لینوکس واقعی)' },
+    { h: 'شمارش: wc',
+      p: [
+        'دستور wc (مخفف word count) سه عدد به شما می‌دهد: تعداد خطوط، تعداد کلمات و تعداد کاراکترهای یک فایل. با گزینه l- فقط خطوط، با w- فقط کلمات و با c- فقط کاراکترها شمرده می‌شوند.',
+        'مثلا wc -l report.txt تعداد خطوط گزارش را می‌دهد. این دستور در فصل بعدی وقتی با پایپ ترکیب شود، تبدیل به یکی از پرکاربردترین ابزارهای ترمینال می‌شود — مثلا برای شمردن تعداد فایل‌های یک پوشه یا تعداد نتایج یک جستجو.'
+      ],
+      code: '$ wc report.txt\n  9  78  512 report.txt   ← خطوط، کلمات، کاراکترها\n$ wc -l report.txt\n  9 report.txt' },
+    { h: 'نوشتن سریع با echo و ریدایرکت',
+      p: [
+        'دستور echo هر متنی را که به آن بدهید چاپ می‌کند: echo "Hello". اما ترکیب آن با علامت > یک ابزار جادویی می‌سازد: echo "my note" > mynote.txt خروجی را به جای صفحه، داخل فایل ذخیره می‌کند. به این تکنیک «ریدایرکت» می‌گویند که در فصل ۶ کامل یادش می‌گیرید.',
+        'فعلا همین را بدانید: علامت > فایل را می‌سازد و اگر موجود باشد، محتوایش را از نو می‌نویسد (بازنویسی کامل). این ساده‌ترین راه برای ساخت سریع فایل‌های متنی در ترمینال است.'
+      ],
+      code: '$ echo "خرید نان" > todo.txt\n$ cat todo.txt\nخرید نان' },
+    { h: 'ویرایشگر nano — ساده و دوست‌داشتنی',
+      p: [
+        'برای ویرایش واقعی فایل‌ها به یک ویرایشگر متنی نیاز داریم. nano ساده‌ترین ویرایشگر متن ترمینال است و برای شروع یادگیری عالی: با دستور nano filename باز می‌شود، با تایپ معمولی ویرایش می‌کنید و با کلیدهای Ctrl+O ذخیره و Ctrl+X خارج می‌شوید (در پایین صفحه هم راهنمای کلیدها همیشه نمایش داده می‌شود).',
+        'ویرایشگر معروف دیگر vim است که قدرتمندتر اما با منحنی یادگیری سخت‌تر است. در این شبیه‌ساز، nano به صورت کامل کار می‌کند: یک فایل را باز کنید، متنش را عوض کنید، ذخیره کنید و بعد با cat نتیجه را ببینید!'
+      ],
+      code: '$ nano mynote.txt\n# ویرایش کنید... سپس:\n# Ctrl+O → ذخیره   Ctrl+X → خروج' }
+  ],
+  cmds: [
+    { c: 'cat welcome.txt', d: 'نمایش کامل محتوای فایل' },
+    { c: 'head report.txt', d: '۱۰ خط اول فایل' },
+    { c: 'head -n 5 report.txt', d: '۵ خط اول فایل' },
+    { c: 'tail notes.md', d: '۱۰ خط آخر فایل' },
+    { c: 'tail -n 3 notes.md', d: '۳ خط آخر فایل' },
+    { c: 'wc -l report.txt', d: 'شمارش تعداد خطوط فایل' },
+    { c: 'echo "salam" > note.txt', d: 'ساخت فایل و نوشتن متن در آن' },
+    { c: 'nano notes.txt', d: 'باز کردن فایل در ویرایشگر nano' }
+  ],
+  tip: 'ترفند حرفه‌ای: tail -f نام‌فایل در لینوکس واقعی، فایل لاگ را زنده تماشا می‌کند و هر خط جدید بلافاصله نمایش داده می‌شود — ابزار شماره یک در عیب‌یابی سرورها.',
+  tasks: [
+    { id: 'c4t1', t: 'محتوای فایل welcome.txt را با cat ببینید.', chk: x => x.ran(/^cat\s+.*welcome\.txt/) },
+    { id: 'c4t2', t: '۵ خط اول فایل report.txt را با head -n 5 ببینید (فایل در documents است).', chk: x => x.hist.some(h=>/\bhead\b/.test(h) && /report\.txt/.test(h) && /(-n\s*5|\s-5)/.test(h)) },
+    { id: 'c4t3', t: '۳ خط آخر فایل notes.md را با tail -n 3 ببینید.', chk: x => x.hist.some(h=>/\btail\b/.test(h) && /notes\.md/.test(h) && /(-n\s*3|\s-3)/.test(h)) },
+    { id: 'c4t4', t: 'تعداد خطوط فایل report.txt را با wc -l بشمارید.', chk: x => x.hist.some(h=>/\bwc\b/.test(h) && /report\.txt/.test(h)) },
+    { id: 'c4t5', t: 'با echo و > یک جمله دلخواه را در فایل mynote.txt در خانه ذخیره کنید.', chk: x => { const n = x.read('~/mynote.txt'); return n !== null && n.trim() !== ''; } },
+    { id: 'c4t6', t: 'فایل mynote.txt را با nano باز کنید، چیزی اضافه کنید و ذخیره کنید.', chk: x => x.hist.some(h=>/^nano\s+.*mynote/.test(h)) && x.edited('~/mynote.txt') }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c5', icon: '🔍', title: 'جستجو در فایل‌ها و متن‌ها', sub: 'دو دستور افسانه‌ای find و grep — قدرتمندترین ابزارهای یافتن هر چیزی در هر جای سیستم.',
+  sections: [
+    { h: 'find — یافتن فایل‌ها و پوشه‌ها',
+      p: [
+        'وقتی ندانید فایلی کجاست، find نجات‌دهنده شماست. ساختار کلی: find مسیر گزینه‌ها. مثلا find /home -name "*.txt" در کل مسیر home به دنبال فایل‌هایی می‌گردد که اسمشان به txt. ختم می‌شود. علامت * یعنی «هر چیزی می‌تواند اینجا باشد» و به آن wildcard می‌گوییم.',
+        'با گزینه type- نوع نتیجه را هم محدود می‌کنید: find . -type d فقط پوشه‌ها را می‌دهد و find . -type f فقط فایل‌ها را. find بی‌رحم نیست اما دقیق است؛ هر چه مسیر بزرگ‌تر بدهید جستجوی کامل‌تر (و کندتر) خواهد بود. جستجو از ریشه / یعنی کل سیستم!'
+      ],
+      code: '$ find ~ -name "*.txt"      ← همه فایل‌های txt در خانه\n$ find . -type d            ← همه پوشه‌های همین‌جا\n$ find /etc -name "host*"   ← فایل‌هایی که با host شروع می‌شوند' },
+    { h: 'grep — شکار متن داخل فایل‌ها',
+      p: [
+        'grep (مخفف Global Regular Expression Print) خطوطی را پیدا می‌کند که شامل یک الگوی خاص هستند. ساده‌ترین استفاده: grep linux welcome.txt یعنی در فایل welcome همه خطوطی را که کلمه linux دارند نشان بده. خروجی دقیقا همان خطوطی است که با الگو مطابقت دارند.',
+        'گزینه‌های مهم: i- جستجو بدون توجه به بزرگی و کوچکی حروف (Linux و LINUX و linux یکسان شوند)، n- نمایش شماره خط هر نتیجه، v- برعکس! (خطوطی که شامل الگو نیستند) و r- جستجوی بازگشتی در کل یک پوشه و زیرپوشه‌ها.',
+        'ترکیب معروف grep -r با یک پوشه یعنی «در همه فایل‌های این پروژه بگرد و بگو کدام فایل، کدام خط، این متن را دارد» — ابزاری که هر برنامه‌نویسی روزی ده بار استفاده می‌کند.'
+      ],
+      code: '$ grep Linux welcome.txt      ← خطوط شامل Linux\n$ grep -i linux welcome.txt   ← بدون حساسیت حروف\n$ grep -n Linux welcome.txt   ← با شماره خط\n$ grep -r "bash" ~/projects   ← جستجو در کل پروژه' },
+    { h: 'which — این دستور از کجا می‌آید؟',
+      p: [
+        'وقتی یک دستور را اجرا می‌کنید، لینوکس آن را در فهرستی از پوشه‌های استاندارد (که در متغیر PATH تعریف شده) جستجو می‌کند. دستور which به شما می‌گوید نسخه اجرایی یک دستور دقیقا کجاست: which ls خروجی /usr/bin/ls را می‌دهد.',
+        'این دستور وقتی طلایی می‌شود که چند نسخه از یک برنامه روی سیستم نصب باشد و بخواهید بدانید کدام نسخه واقعا اجرا می‌شود — یک ترفند عیب‌یابی حرفه‌ای.'
+      ],
+      code: '$ which ls\n/usr/bin/ls\n$ which bash\n/usr/bin/bash' }
+  ],
+  cmds: [
+    { c: 'find ~ -name "*.txt"', d: 'جستجوی همه فایل‌های txt. در خانه' },
+    { c: 'find . -type d', d: 'فقط پوشه‌ها در مسیر فعلی' },
+    { c: 'find . -type f -name "*.md"', d: 'فایل‌های مارک‌داون از همین‌جا به پایین' },
+    { c: 'grep Linux welcome.txt', d: 'جستجوی کلمه در یک فایل' },
+    { c: 'grep -i linux welcome.txt', d: 'جستجو بدون حساسیت به حروف' },
+    { c: 'grep -n Linux welcome.txt', d: 'جستجو با نمایش شماره خط' },
+    { c: 'grep -r linux ~/documents', d: 'جستجوی بازگشتی در کل پوشه' },
+    { c: 'grep -v Linux welcome.txt', d: 'خطوطی که شامل کلمه نیستند' },
+    { c: 'which ls', d: 'مسیر واقعی یک دستور' }
+  ],
+  tip: 'اگر grep چیزی پیدا نکند هیچ خروجی‌ای نشان نمی‌دهد و کد خروج ۱ برمی‌گرداند — پیدا نشدن هم خودش یک جواب است! سکوت در ترمینال یعنی «چیزی نبود».',
+  tasks: [
+    { id: 'c5t1', t: 'با find همه فایل‌های با پسوند txt. را در پوشه خانه پیدا کنید: find ~ -name "*.txt"', chk: x => x.hist.some(h=>/\bfind\b/.test(h) && /-name/.test(h) && /\.txt/.test(h)) },
+    { id: 'c5t2', t: 'فقط پوشه‌ها را با find . -type d فهرست کنید.', chk: x => x.hist.some(h=>/\bfind\b/.test(h) && /-type\s+d/.test(h)) },
+    { id: 'c5t3', t: 'کلمه Linux را در فایل welcome.txt جستجو کنید (grep Linux welcome.txt).', chk: x => x.hist.some(h=>/\bgrep\b/.test(h) && /welcome\.txt/.test(h)) },
+    { id: 'c5t4', t: 'همان جستجو را با گزینه i- تکرار کنید تا حروف کوچک linux هم پیدا شود.', chk: x => x.hist.some(h=>/\bgrep\s+(-\w*\s+)*\w*i/.test(h)) },
+    { id: 'c5t5', t: 'با گزینه n- شماره خط نتایج را هم ببینید.', chk: x => x.hist.some(h=>/\bgrep\s+(-\w*\s+)*\w*n/.test(h)) },
+    { id: 'c5t6', t: 'با دستور which مسیر دستور bash را پیدا کنید.', chk: x => x.ran(/^which\s+\S+/) }
+  ]
+});
+/* ============================================================
+   فصل‌های آموزشی — بخش ۲ (فصل ۶ تا ۹)
+   ============================================================ */
+
+CHAPTERS.push({
+  id: 'c6', icon: '🔀', title: 'پایپ و ریدایرکت — جادوی ترکیب دستورها', sub: 'فلسفه اصلی یونیکس: دستورهای کوچک که با هم زنجیره‌های قدرتمند می‌سازند.',
+  sections: [
+    { h: 'ریدایرکت: خروجی را جایی دیگر بفرست',
+      p: [
+        'هر دستور در ترمینال یک خروجی متنی دارد که به‌طور پیش‌فرض روی صفحه نمایش داده می‌شود. با علامت > می‌توانید این خروجی را به جای صفحه، داخل یک فایل بریزید: ls > files.txt فهرست فایل‌ها را در فایل files.txt ذخیره می‌کند. اگر فایل وجود نداشته باشد ساخته می‌شود و اگر باشد، از نو نوشته می‌شود (محتوای قبلی پاک می‌شود!).',
+        'علامت >> یعنی «اضافه کن» (Append): با echo "line 2" >> files.txt خط جدید به انتهای فایل قبلی اضافه می‌شود بدون اینکه چیزی از بین برود. انتخاب بین > و >> یکی از رایج‌ترین اشتباهات مبتدی‌هاست — بازنویسی تصادفی یک فایل مهم با > دردناک است!',
+        'علامت < هم جهت برعکس دارد: ورودی یک دستور را از فایل می‌گیرید. مثلا wc -l < report.txt می‌شمارد. این سه علامت، ابزارهای پایه‌ای ذخیره و جابه‌جایی داده در ترمینال هستند.'
+      ],
+      code: '$ ls > files.txt        ← ذخیره خروجی در فایل (بازنویسی)\n$ echo "added line" >> files.txt  ← اضافه کردن به فایل\n$ wc -l < files.txt     ← خواندن ورودی از فایل' },
+    { h: 'پایپ: زنجیره کردن دستورها با |',
+      p: [
+        'علامت پایپ (|) خروجی یک دستور را مستقیم به ورودی دستور بعدی می‌فرستد. این یعنی می‌توانید دستورهای کوچک را مثل لگو به هم بچسبانید و ابزارهای قدرتمندی بسازید. فلسفه یونیکس همین است: «برنامه‌ای بنویس که یک کار را خوب انجام دهد» و بعد با هم ترکیبشان کن.',
+        'مثال کلاسیک: cat report.txt | grep Linux یعنی «محتوای فایل را بخوان و فقط خطوطی را نشان بده که Linux دارند». یا ls | wc -l یعنی «فایل‌ها را فهرست کن و تعدادشان را بشمار». خروجی هر حلقه ورودی حلقه بعدی است؛ می‌توانید زنجیره‌های ۵-۶ حلقه‌ای بسازید.',
+        'ترکیب‌های پرکاربرد که حرفه‌ای‌ها هر روز می‌زنند: sort برای مرتب کردن خطوط، uniq برای حذف تکراری‌ها، head و tail برای برش دادن و grep برای صاف کردن. وقتی این‌ها را با پایپ ترکیب کنید، دیگر هیچ داده‌ای از شما پنهان نمی‌ماند.'
+      ],
+      code: '$ cat report.txt | grep Linux   ← فیلتر کردن محتوا\n$ ls | wc -l                    ← شمردن تعداد فایل‌ها\n$ cat notes.md | sort           ← مرتب‌سازی خطوط\n$ ls | sort | head -3           ← زنجیره سه‌حلقه‌ای!' },
+    { h: 'چرا پایپ این‌قدر مهم است؟',
+      p: [
+        'در دنیای واقعی، یک مدیر سیستم ممکن است بنویسد: «از بین ده هزار خط لاگ، خطوط خطا را پیدا کن، تعداد تکرار هر خطا را بشمار و ده خطای پرتکرار را نشان بده» — و همه این کار را با یک خط پایپ انجام دهد؛ کاری که با ابزارهای گرافیکی ساعت‌ها طول می‌کشد.',
+        'مثال واقعی از سرور: cat server.log | grep ERROR | sort | uniq -c | sort -rn | head -5. نگران نباشید اگر الان پیچیده به نظر می‌رسد؛ تا پایان همین فصل می‌توانید این دستورها را بخوانید و بنویسید.'
+      ],
+      code: '$ cat todo.txt | sort | uniq    ← مرتب‌سازی و حذف تکراری\n$ ls ~ | wc -l                  ← چند آیتم در خانه داریم؟' }
+  ],
+  cmds: [
+    { c: 'ls > files.txt', d: 'ذخیره خروجی در فایل (بازنویسی)' },
+    { c: 'echo "text" >> files.txt', d: 'اضافه کردن متن به انتهای فایل' },
+    { c: 'cat welcome.txt | wc -l', d: 'شمارش خطوط با پایپ' },
+    { c: 'cat report.txt | grep Linux', d: 'فیلتر کردن خطوط شامل کلمه' },
+    { c: 'ls | sort', d: 'مرتب‌سازی خروجی ls' },
+    { c: 'cat todo.txt | uniq', d: 'حذف خطوط تکراری مجاور' },
+    { c: 'ls | wc -l', d: 'شمارش تعداد آیتم‌ها' },
+    { c: 'history | tail -5', d: '۵ دستور آخر اجرا شده' }
+  ],
+  warn: 'فرق > و >> را هرگز فراموش نکنید: > فایل را از نو می‌نویسد و محتوای قبلی را نابود می‌کند؛ >> اضافه می‌کند. وقتی با فایل‌های مهم کار می‌کنید، اشتباه گرفتن این دو یعنی از دست دادن داده!',
+  tip: 'در زبان انگلیسی علامت | به Pipe (لوله) معروف است چون مثل یک لوله، داده را از یک دستور به دستور بعدی می‌رساند. در کیبوردهای فارسی معمولا با Shift+کد کلید 7 یا از کپی می‌توانید آن را تایپ کنید.',
+  tasks: [
+    { id: 'c6t1', t: 'خروجی دستور ls را در فایل files.txt ذخیره کنید: ls > files.txt', chk: x => x.isFile('~/files.txt') },
+    { id: 'c6t2', t: 'یک خط جدید با echo و >> به files.txt اضافه کنید.', chk: x => x.hist.some(h=>/>>\s*files\.txt/.test(h)) },
+    { id: 'c6t3', t: 'تعداد خطوط welcome.txt را با پایپ بشمارید: cat welcome.txt | wc -l', chk: x => x.hist.some(h=>/\|\s*wc\b/.test(h)) },
+    { id: 'c6t4', t: 'با پایپ و grep خطوطی از report.txt را که Linux دارند فیلتر کنید.', chk: x => x.hist.some(h=>/\|\s*grep\b/.test(h)) },
+    { id: 'c6t5', t: 'خروجی یک دستور را با sort مرتب کنید (مثلا: ls | sort یا cat todo.txt | sort).', chk: x => x.hist.some(h=>/\|\s*sort\b/.test(h)) },
+    { id: 'c6t6', t: 'محتوای files.txt را با cat ببینید تا نتیجه کارتان را بررسی کنید.', chk: x => x.ran(/^cat\s+.*files\.txt/) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c7', icon: '🔐', title: 'دسترسی‌ها و مالکیت فایل‌ها', sub: 'یکی از مهم‌ترین دلایل امنیت و ثبات لینوکس: سیستم دسترسی rwx و دستورهای chmod و chown.',
+  sections: [
+    { h: 'هر فایل یک شناسنامه دارد',
+      p: [
+        'وقتی با ls -l جزئیات فایل‌ها را می‌بینید، در ابتدای هر خط رشته‌ای مثل rwxr-xr-- می‌بینید. این رشته سه بخش سه‌حرفی دارد: سه حرف اول برای مالک (Owner)، سه حرف وسط برای گروه (Group) و سه حرف آخر برای بقیه (Others).',
+        'در هر بخش، r یعنی اجازه خواندن (Read)، w یعنی اجازه نوشتن (Write) و x یعنی اجازه اجرا (eXecute). پس rwxr-xr-- یعنی: مالک می‌تواند بخواند، بنویسد و اجرا کند؛ گروه فقط بخواند و اجرا کند؛ بقیه فقط بخوانند. بعد از این رشته، نام مالک و گروه فایل هم آمده است.'
+      ],
+      code: '-rwxr-xr--  1 student student  512 Oct 27 10:30 script.sh\n│└─┬─┘└─┬─┘└─┬─┘    └──┬──┘ └──┬──┘\n│ مالک  گروه  بقیه     مالک    گروه\n└ـ خط تیره اول یعنی «فایل» است (d یعنی پوشه)' },
+    { h: 'chmod — تغییر دسترسی‌ها',
+      p: [
+        'دستور chmod (مخفف change mode) دسترسی‌های یک فایل را تغییر می‌دهد. دو روش دارید. روش اول نمادین است: chmod +x script.sh به همه اجازه اجرا می‌دهد؛ chmod u+x فقط به مالک (u=user)؛ chmod go-w دسترسی نوشتن گروه و بقیه را می‌گیرد.',
+        'روش دوم و رایج‌تر، اعدادی است: هر دسترسی یک عدد دارد — r=4، w=2، x=1 — و دسترسی هر گروه جمع این اعداد است. مثلا 7 یعنی 4+2+1 (خواندن+نوشتن+اجرا = rwx)، 6 یعنی 4+2 یعنی rw-، و 4 یعنی فقط خواندن. پس chmod 755 یعنی مالک rwx و گروه و بقیه rx. دو عدد پرکاربرد دنیای لینوکس: 755 برای اسکریپت‌ها و پوشه‌ها، 644 برای فایل‌های معمولی.'
+      ],
+      code: '$ chmod +x script.sh     ← اضافه شدن حق اجرا\n$ chmod 755 deploy.sh    ← rwxr-xr-x (استاندارد اسکریپت)\n$ chmod 644 notes.txt    ← rw-r--r-- (استاندارد فایل)\n$ chmod 600 secret.txt   ← rw------- فقط مالک!' },
+    { h: 'chown و قدرت sudo',
+      p: [
+        'دستور chown (مخفف change owner) مالک و گروه فایل را عوض می‌کند: sudo chown root file.txt یعنی مالکیت فایل را به root بده. نکته مهم: تغییر مالکیت معمولا فقط توسط مدیر سیستم (root) مجاز است، برای همین باید از sudo استفاده کنید.',
+        'sudo (مخفف SuperUser DO) یعنی «این دستور را با دسترسی مدیر اجرا کن». در لینوکس واقعی از شما رمز عبور می‌خواهد و دستور را با بالاترین سطح دسترسی اجرا می‌کند. فلسفه لینوکس این است: کارهای روزمره با دسترسی عادی انجام شوند و فقط وقتی واقعا لازم است از sudo استفاده شود — همین اصل ساده، امنیت کل سیستم را تضمین می‌کند.'
+      ],
+      code: '$ sudo chown root report.txt   ← مالک شدن root\n$ ls -l report.txt             ← مالک عوض شده!\n$ sudo apt update              ← مثال دیگر: نصب با sudo' }
+  ],
+  cmds: [
+    { c: 'ls -l welcome.txt', d: 'دیدن دسترسی‌ها و مالک فعلی فایل' },
+    { c: 'chmod +x script.sh', d: 'دادن حق اجرا به اسکریپت' },
+    { c: 'chmod 755 file.sh', d: 'دسترسی استاندارد اسکریپت (rwxr-xr-x)' },
+    { c: 'chmod 644 file.txt', d: 'دسترسی استاندارد فایل (rw-r--r--)' },
+    { c: 'chmod 600 private.txt', d: 'فقط مالک اجازه خواندن و نوشتن دارد' },
+    { c: 'sudo chown root file.txt', d: 'تغییر مالک فایل به root' },
+    { c: 'sudo chown student:student file', d: 'تغییر مالک و گروه با هم' }
+  ],
+  tip: 'دسترسی عددی را اینطور حفظ کنید: 7=تمام دسترسی‌ها (rwx)، 6=خواندن+نوشتن (rw-)، 5=خواندن+اجرا (r-x)، 4=فقط خواندن (r--)، 0=هیچ. ترکیب 755 و 644 و 600 را حفظ کنید؛ ۹۰ درصد کارهای روزانه همین سه‌تاست.',
+  warn: 'chmod 777 (دادن همه دسترسی‌ها به همه) یک ضعف امنیتی معروف است! هیچ‌وقت روی فایل‌های مهم یا در محیط کاری استفاده نکنید — حرفه‌ای‌ها این کار را نشانه بی‌تجربگی می‌دانند.',
+  tasks: [
+    { id: 'c7t1', t: 'دسترسی‌های فعلی welcome.txt را با ls -l ببینید.', chk: x => x.ran(/^ls\s+-\w*l\w*.*welcome/) },
+    { id: 'c7t2', t: 'به اسکریپت script.sh در پوشه downloads با chmod +x حق اجرا بدهید.', chk: x => { const m = x.mode('~/downloads/script.sh'); return m && m[2] === 'x'; } },
+    { id: 'c7t3', t: 'فایلی به نام private.txt در خانه بسازید و دسترسی آن را 600 کنید.', chk: x => x.mode('~/private.txt') === 'rw-------' },
+    { id: 'c7t4', t: 'فایلی به نام shared.txt بسازید و دسترسی آن را با 664 تنظیم کنید.', chk: x => x.mode('~/shared.txt') === 'rw-rw-r--' },
+    { id: 'c7t5', t: 'با sudo chown مالک فایل shared.txt را به root تغییر دهید.', chk: x => x.hist.some(h=>/chown\s+root/.test(h)) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c8', icon: '👤', title: 'کاربران و گروه‌ها', sub: 'لینوکس یک سیستم چندکاربره است — بیایید ببینیم کاربران، گروه‌ها و رمزها چطور مدیریت می‌شوند.',
+  sections: [
+    { h: 'همه‌چیز درباره کاربر فعلی',
+      p: [
+        'لینوکس از روز اول برای هم‌زمانی چند کاربر طراحی شده است. هر کاربر یک نام، یک شناسه عددی (UID) و عضویت در یک یا چند گروه دارد. دستور whoami نام کاربر فعلی را می‌دهد، دستور id اطلاعات کامل (شناسه کاربر، شناسه گروه اصلی، همه گروه‌ها) را نشان می‌دهد و دستور groups فقط فهرست گروه‌ها را می‌دهد.',
+        'دو کاربر خاص وجود دارند: root که مدیر کل سیستم است (UID=0) و می‌تواند هر کاری بکند، و کاربران عادی که فقط در محدوده خانه خود اختیار کامل دارند. سیستم اعضای خودش را در فایل ‎/etc/passwd نگه می‌دارد — بله، با cat می‌توانید محتوایش را ببینید!'
+      ],
+      code: '$ whoami\nstudent\n$ id\nuid=1000(student) gid=1000(student) groups=...,27(sudo),4(adm)\n$ cat /etc/passwd | grep student' },
+    { h: 'ساخت کاربر جدید و مدیریت رمز',
+      p: [
+        'دستور useradd (یا adduser در اوبونتو) یک کاربر جدید می‌سازد: sudo useradd ali. این دستور به دسترسی مدیر نیاز دارد، برای همین با sudo اجرا می‌شود. بعد از ساخت، یک خط جدید به ‎/etc/passwd اضافه می‌شود و (در شبیه‌ساز ما) پوشه خانه کاربر هم ساخته می‌شود.',
+        'دستور passwd رمز عبور کاربران را تغییر می‌دهد: passwd بدون آرگومان رمز خودتان را عوض می‌کند و sudo passwd ali رمز کاربر ali را. در سیستم واقعی بعد از این دستور رمز جدید را دوبار می‌نویسید. گروه‌ها هم ابزار مدیریت مجوزهای دسته‌ای هستند: همه اعضای گروه sudo می‌توانند از sudo استفاده کنند.'
+      ],
+      code: '$ sudo useradd ali          ← ساخت کاربر\n$ sudo passwd ali            ← تنظیم رمز ali\n$ groups                     ← گروه‌های من\n$ cat /etc/passwd | grep ali ← ثبت شدن کاربر' },
+    { h: 'تعویض کاربر با su',
+      p: [
+        'دستور su (مخفف Substitute User یا Switch User) شما را به کاربر دیگری تبدیل می‌کند: su root یعنی تبدیل شدن به مدیر (در واقعی با رمز root). بعد از تعویض، Prompt ترمینال تغییر می‌کند و علامت # جای $ می‌نشیند که یعنی «شما مدیر هستید».',
+        'در این شبیه‌ساز هم su کار می‌کند: امتحان کنید su root و بعد whoami بزنید! برای برگشت، exit را بزنید. تجربه کار کردن با root برای یادگیری این نکته حیاتی است: با قدرت کامل، مسئولیت کامل — یک دستور اشتباه در حساب root می‌تواند کل سیستم را از کار بیندازد.'
+      ],
+      code: '$ su root\n# whoami\nroot\n# exit' }
+  ],
+  cmds: [
+    { c: 'whoami', d: 'نام کاربر فعلی' },
+    { c: 'id', d: 'شناسه و گروه‌های کاربر فعلی' },
+    { c: 'groups', d: 'فهرست گروه‌های کاربر' },
+    { c: 'sudo useradd ali', d: 'ساخت کاربر جدید' },
+    { c: 'sudo passwd ali', d: 'تغییر رمز یک کاربر' },
+    { c: 'cat /etc/passwd', d: 'دیدن لیست همه کاربران سیستم' },
+    { c: 'su root', d: 'تبدیل شدن به کاربر root' },
+    { c: 'exit', d: 'برگشت از حساب su شده' }
+  ],
+  tip: 'تفاوت مهم sudo و su: sudo فقط «یک دستور» را با دسترسی مدیر اجرا می‌کند و امن‌تر است؛ su کل حساب شما را تا خروج root می‌کند. در سرورهای حرفه‌ای معمولا ورود مستقیم root مسدود است و همه از sudo استفاده می‌کنند.',
+  tasks: [
+    { id: 'c8t1', t: 'نام کاربر فعلی را با whoami نمایش دهید.', chk: x => x.ran(/^whoami\s*$/) },
+    { id: 'c8t2', t: 'اطلاعات کامل حساب خود را با id ببینید.', chk: x => x.ran(/^id\s*$/) },
+    { id: 'c8t3', t: 'گروه‌های خود را با groups فهرست کنید.', chk: x => x.ran(/^groups\s*$/) },
+    { id: 'c8t4', t: 'کاربری به نام ali با sudo useradd بسازید.', chk: x => x.read('/etc/passwd').includes('ali:') },
+    { id: 'c8t5', t: 'با grep خط مربوط به ali را در ‎/etc/passwd پیدا کنید.', chk: x => x.hist.some(h=>/\bgrep\b/.test(h) && /passwd/.test(h)) },
+    { id: 'c8t6', t: 'رمز کاربر ali را با sudo passwd ali تنظیم کنید.', chk: x => x.hist.some(h=>/passwd\s+ali/.test(h)) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c9', icon: '⚙️', title: 'مدیریت پروسه‌ها', sub: 'هر برنامه‌ای که اجرا می‌شود یک پروسه است — یاد بگیرید ببینیدشان، مدیریتشان کنید و در صورت نیاز بکشیدشان!',
+  sections: [
+    { h: 'پروسه چیست؟',
+      p: [
+        'هر بار که برنامه‌ای اجرا می‌شود، سیستم‌عامل برای آن یک پروسه (Process) می‌سازد: یک بسته زنده شامل کد برنامه، حافظه، و یک شماره شناسایی یکتا به نام PID (Process ID). همین صفحه مرورگری که الان می‌خوانید هم یک پروسه است، ترمینال شما هم، و حتی سیستم‌عامل صدها پروسه پس‌زمینه دارد.',
+        'در لینوکس دو نوع پروسه داریم: پروسه‌های پیش‌زمینه (Foreground) که شما منتظرشان می‌مانید، و پروسه‌های پس‌زمینه (Background) که بی‌سروصدا در کنار بقیه کار می‌کنند. اجرای یک دستور با علامت & در آخر آن را به پس‌زمینه می‌فرستد: sleep 300 & یعنی ۳۰۰ ثانیه شمارش کن ولی من را معطل نکن.'
+      ] },
+    { h: 'دیدن پروسه‌ها: ps و top',
+      p: [
+        'دستور ps پروسه‌های در حال اجرا را فهرست می‌کند. ps به تنهایی فقط پروسه‌های همین ترمینال را می‌دهد؛ اما ps aux همه پروسه‌های کل سیستم را با جزئیات کامل نشان می‌دهد: نام کاربر مالک، درصد CPU و RAM، و دستور اجرا شده. حرف a یعنی همه کاربران، u اطلاعات کاربر، و x پروسه‌های بدون ترمینال.',
+        'دستور top یک مانیتور زنده است: پروسه‌ها را به ترتیب مصرف CPU نشان می‌دهد و هر چند ثانیه به‌روزرسانی می‌کند — مثل «Task Manager» ویندوز ولی خیلی قوی‌تر. برای خروج از top دکمه q را بزنید. این دو دستور اولین ابزارهای عیب‌یابی هر مدیر سیستم هستند: «چی داره سرور رو کند می‌کنه؟» همیشه جوابش در ps aux است.'
+      ],
+      code: '$ ps              ← پروسه‌های این ترمینال\n$ ps aux          ← همه پروسه‌های سیستم\n$ top             ← مانیتور زنده (خروج با q)' },
+    { h: 'شکار پروسه‌ها: jobs و kill',
+      p: [
+        'دستور jobs کارهای پس‌زمینه این ترمینال را لیست می‌کند. هر کار یک شماره دارد ([1]، [2] و...) و وضعیتش (Running یا Done) را نشان می‌دهد. اجرای یک دستور طولانی با & به شما اجازه می‌دهد همزمان به کارهای دیگر برسید.',
+        'حالا مهم‌ترین بخش: وقتی پروسه‌ای مشکل درست می‌کند، باید بکشیدش! دستور kill این کار را با PID انجام می‌دهد: kill 1423 درخواست محترمانه پایان (SIGTERM) می‌فرستد که پروسه می‌تواند کارهایش را جمع کند. اگر گوش ندهد، kill -9 1423 (سیگنال SIGKILL) قطع برق می‌کند و پروسه بدون هیچ فرصتی از بین می‌رود. حرفه‌ای‌ها اول kill معمولی را امتحان می‌کنند و -9 را برای مقاوم‌ها نگه می‌دارند.'
+      ],
+      code: '$ sleep 300 &         ← اجرا در پس‌زمینه\n[1] 1421\n$ jobs                ← دیدن کارهای پس‌زمینه\n$ kill 1421           ← پایان محترمانه\n$ kill -9 1421        ← پایان اجباری!' }
+  ],
+  cmds: [
+    { c: 'ps', d: 'فهرست پروسه‌های ترمینال فعلی' },
+    { c: 'ps aux', d: 'همه پروسه‌های سیستم با جزئیات' },
+    { c: 'top', d: 'مانیتور زنده مصرف منابع' },
+    { c: 'sleep 300 &', d: 'اجرای پروسه در پس‌زمینه' },
+    { c: 'jobs', d: 'کارهای پس‌زمینه ترمینال' },
+    { c: 'kill 1421', d: 'پایان دادن به پروسه با PID' },
+    { c: 'kill -9 1421', d: 'کشتن اجباری پروسه (SIGKILL)' }
+  ],
+  warn: 'قبل از kill کردن حتما با ps aux مطمئن شوید PID درست را انتخاب کرده‌اید! kill کردن اشتباه یک پروسه سیستمی می‌تواند سرویس‌ها را از کار بیندازد. در سرور واقعی، پروسه‌های با PID پایین معمولا حیاتی هستند.',
+  tip: 'ترفند پیدا کردن PID راحت: ps aux | grep نام‌برنامه. مثلا برای پیدا کردن پروسه nginx: ps aux | grep nginx — ترکیب فصل قبل و این فصل!',
+  tasks: [
+    { id: 'c9t1', t: 'پروسه‌های فعلی ترمینال را با ps ببینید.', chk: x => x.ran(/^ps\s*$/) },
+    { id: 'c9t2', t: 'همه پروسه‌های سیستم را با ps aux مشاهده کنید.', chk: x => x.ran(/^ps\s+aux\s*$/) },
+    { id: 'c9t3', t: 'یک پروسه در پس‌زمینه اجرا کنید: sleep 300 &', chk: x => x.hist.some(h=>/sleep\s+\d+\s*&/.test(h)) },
+    { id: 'c9t4', t: 'کارهای پس‌زمینه خود را با jobs ببینید.', chk: x => x.ran(/^jobs\s*$/) },
+    { id: 'c9t5', t: 'پروسه sleep را که ساختید با kill و PID آن بکشید.', chk: x => x.ran(/^kill\b/) },
+    { id: 'c9t6', t: 'مانیتور top را اجرا کنید تا وضعیت منابع را ببینید.', chk: x => x.ran(/^top\s*$/) }
+  ]
+});
+/* ============================================================
+   فصل‌های آموزشی — بخش ۳ (فصل ۱۰ تا ۱۳)
+   ============================================================ */
+
+CHAPTERS.push({
+  id: 'c10', icon: '📦', title: 'نصب نرم‌افزار و مدیریت بسته‌ها', sub: 'نصب هر برنامه‌ای با یک دستور — دنیای менеджرهای بسته و مخازن نرم‌افزاری.',
+  sections: [
+    { h: 'مفهوم بسته و مخزن',
+      p: [
+        'در ویندوز برای نصب هر برنامه، در اینترنت جستجو می‌کنید، فایل دانلود می‌کنید، Next می‌زنید و امیدوارید فایل ویروس نداشته باشد! لینوکس راه هوشمندتری دارد: همه نرم‌افزارها به شکل «بسته» (Package) استاندارد در «مخازن» (Repositories) رسمی نگهداری می‌شوند و یک ابزار واحد آن‌ها را نصب، به‌روزرسانی و حذف می‌کند.',
+        'مزیت‌ها خیره‌کننده است: هزاران نرم‌افزار معتبر در یک‌جا، دانلود از منابع رسمی و امضاشده، حل خودکار وابستگی‌ها (اگر برنامه A به کتابخانه B نیاز دارد، خودش نصبش می‌کند) و به‌روزرسانی یک‌جای همه برنامه‌ها. خانواده اوبونتو و دبیان از apt استفاده می‌کنند، فدورا از dnf و آرچ از pacman — منطق همه یکی است.'
+      ] },
+    { h: 'apt — ابزار اصلی اوبونتو و دبیان',
+      p: [
+        'چرخه کار با apt چهار مرحله دارد. اول: sudo apt update فهرست تازه مخازن را می‌گیرد (چک می‌کند چه نسخه‌هایی موجب است) — بعد از هر تغییری در مخازن، اولین دستوری است که می‌زنید. دوم: sudo apt install نام‌برنامه نصب می‌کند. سوم: sudo apt remove نام‌برنامه حذف می‌کند. چهارم: apt search کلمه در توضیحات بسته‌ها جستجو می‌کند.',
+        'نکته امنیتی مهم: نصب و حذف به دسترسی مدیر نیاز دارد، برای همین همیشه با sudo اجرا می‌شوند. اگر بدون sudo بزنید، خطای قفل فایل (Could not open lock file) می‌گیرید — خودش یک تمرین آموزشی خوب است!'
+      ],
+      code: '$ sudo apt update          ← به‌روزرسانی فهرست مخازن\n$ apt search htop          ← جستجوی برنامه\n$ sudo apt install htop    ← نصب!\n$ sudo apt remove htop     ← حذف' },
+    { h: 'تست نصب: htop و tree',
+      p: [
+        'در این شبیه‌ساز هم apt واقعا کار می‌کند! برخی دستورهای این آموزش (مثل htop و tree) از اول نصب نیستند و باید خودتان نصبشان کنید — دقیقا مثل سرور واقعی. بعد از نصب، دستور بلافاصله در دسترس قرار می‌گیرد.',
+        'با دستور apt list --installed می‌توانید ببینید چه چیزهایی روی سیستم نصب است. این تمرین را انجام دهید: اول tree را بدون نصب اجرا کنید (خطا می‌گیرید)، بعد نصبش کنید و دوباره اجرا کنید — تفاوت را لمس خواهید کرد!'
+      ],
+      code: '$ tree          ← خطا: نصب نیست!\n$ sudo apt install tree\n$ tree          ← حالا کار می‌کند ✨' }
+  ],
+  cmds: [
+    { c: 'sudo apt update', d: 'به‌روزرسانی فهرست بسته‌های موجود' },
+    { c: 'apt search htop', d: 'جستجوی بسته در مخازن' },
+    { c: 'sudo apt install htop', d: 'نصب یک بسته' },
+    { c: 'sudo apt remove htop', d: 'حذف یک بسته' },
+    { c: 'apt list --installed', d: 'لیست بسته‌های نصب‌شده' },
+    { c: 'tree', d: 'نمایش درختی پوشه‌ها (بعد از نصب)' },
+    { c: 'htop', d: 'مانیتور پروسه پیشرفته (بعد از نصب)' }
+  ],
+  tip: 'قانون طلایی سرورهای واقعی: قبل از نصب هر چیزی اول sudo apt update بزنید. خیلی از خطاهای «Package not found» فقط به این دلیل است که فهرست مخازن قدیمی است.',
+  tasks: [
+    { id: 'c10t1', t: 'فهرست مخازن را با sudo apt update به‌روز کنید.', chk: x => x.hist.some(h=>/apt(-get)?\s+update/.test(h)) },
+    { id: 'c10t2', t: 'برنامه htop را با apt search جستجو کنید.', chk: x => x.hist.some(h=>/apt(-get)?\s+search/.test(h)) },
+    { id: 'c10t3', t: 'htop را نصب کنید: sudo apt install htop', chk: x => x.installed('htop') },
+    { id: 'c10t4', t: 'حالا htop را اجرا کنید و مانیتور پیشرفته را ببینید!', chk: x => x.ran(/^htop\s*$/) },
+    { id: 'c10t5', t: 'ابزار tree را هم نصب کنید و ساختار درختی پوشه خانه را ببینید.', chk: x => x.installed('tree') },
+    { id: 'c10t6', t: 'لیست بسته‌های نصب‌شده را با apt list --installed بررسی کنید.', chk: x => x.hist.some(h=>/apt(-get)?\s+list/.test(h)) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c11', icon: '🖥️', title: 'اطلاعات سیستم، دیسک و شبکه', sub: 'جعبه ابزار عیب‌یابی: فهمیدن وضعیت سخت‌افزار، فضای دیسک، حافظه و اتصال شبکه.',
+  sections: [
+    { h: 'شناخت سیستم',
+      p: [
+        'دستور uname -a همه‌چیز را درباره هسته سیستم می‌گوید: نوع سیستم‌عامل (Linux)، نام دستگاه، نسخه هسته و معماری پردازنده (x86_64). دستور hostname نام دستگاه را می‌دهد و uptime نشان می‌دهد سیستم چقدر است روشن است — سرورهایی هستند که سال‌ها بدون ریبوت کار می‌کنند!',
+        'دستور cal تقویم ماه جاری را در ترمینال نشان می‌دهد — یکی از آن لذت‌های کوچک ترمینال. هر وقت خواستید بدانید «این سیستم چیست؟ چه نسخه‌ای دارد؟ چقدر است روشن است؟» این سه دستور پاسخ شما هستند.'
+      ],
+      code: '$ uname -a\nLinux linux-academy 5.15.0-academy #1 SMP x86_64 GNU/Linux\n$ hostname\nlinux-academy\n$ uptime\n 14:32:07 up 2 days,  3:14,  1 user,  load average: 0.42...' },
+    { h: 'فضای دیسک و حافظه',
+      p: [
+        'دو دستور مکمل برای مدیریت فضا: df (مخفف disk free) فضای دیسک‌ها را نشان می‌دهد — با df -h می‌بینید هر پارتیشن چقدر ظرفیت دارد و چقدر پر شده. حرف h یعنی human-readable یعنی اعداد خوانا: K برای کیلوبایت، M مگا و G گیگابایت.',
+        'از طرف دیگر du (disk usage) اندازه پوشه‌ها را حساب می‌کند: du -sh documents یعنی «کل حجم این پوشه را یک‌جا بگو». ترکیب s (خلاصه) و h (خوانا) محبوب‌ترین شکل استفاده است. وقتی دیسک پر می‌شود و نمی‌دانید مقصر کجاست، du از ریشه شروع می‌شود و پوشه‌های بزرگ را شکار می‌کند.',
+        'دستور free هم وضعیت RAM را نشان می‌دهد: free -h می‌گوید چقدر حافظه کل، مصرف‌شده و آزاد دارید. سه‌گانه df و du و free، سه سوال همیشگی هر عیب‌یابی کارایی است.'
+      ],
+      code: '$ df -h              ← فضای پارتیشن‌ها\n$ du -sh documents   ← حجم یک پوشه\n$ free -h            ← وضعیت حافظه RAM' },
+    { h: 'ابزارهای شبکه',
+      p: [
+        'دستور ping برای تست اتصال است: یک بسته کوچک به مقصد می‌فرستد و منتظر پاسخ می‌ماند. ping google.com چهار بسته می‌فرستد و زمان رفت‌وبرگشت (time) را نشان می‌دهد — اگر جواب آمد یعنی اینترنت و DNS کار می‌کنند. با گزینه c- تعداد بسته را کم می‌کنید: ping -c 2 google.com.',
+        'دستور curl هر آدرس وب را صدا می‌زند و محتوایش را در ترمینال نشان می‌دهد — ابزار شماره یک تست API برای برنامه‌نویسان. دستور ifconfig (و جایگزین مدرنش ip a) اطلاعات کارت‌های شبکه را می‌دهد: آدرس IP داخلی شما (مثلا 10.0.2.15) و لوکال‌هاست 127.0.0.1 که همیشه یعنی «خودم».'
+      ],
+      code: '$ ping -c 4 google.com    ← تست اتصال\n$ curl example.com        ← گرفتن محتوای وب\n$ ip a                    ← آدرس‌های IP دستگاه' }
+  ],
+  cmds: [
+    { c: 'uname -a', d: 'اطلاعات کامل هسته و سیستم‌عامل' },
+    { c: 'hostname', d: 'نام دستگاه' },
+    { c: 'uptime', d: 'مدت زمان روشن بودن و بار سیستم' },
+    { c: 'df -h', d: 'فضای آزاد دیسک‌ها به صورت خوانا' },
+    { c: 'du -sh documents', d: 'حجم کلی یک پوشه' },
+    { c: 'free -h', d: 'وضعیت حافظه RAM' },
+    { c: 'cal', d: 'تقویم ماه جاری' },
+    { c: 'ping -c 4 google.com', d: 'تست اتصال با ۴ بسته' },
+    { c: 'curl example.com', d: 'دریافت محتوای یک صفحه وب' },
+    { c: 'ip a', d: 'نمایش آدرس‌های IP' }
+  ],
+  tip: 'در df به ستون Use% نگاه کنید؛ اگر پارتیشن ریشه (/) بالای ۹۰ درصد باشد، سیستم شروع به کندی می‌کند و سرویس‌ها خراب می‌شوند. اولین چیزی که در هر سرور خراب چک می‌شود: df -h و بعد du.',
+  tasks: [
+    { id: 'c11t1', t: 'اطلاعات کامل سیستم را با uname -a ببینید.', chk: x => x.hist.some(h=>/uname/.test(h) && /-a/.test(h)) },
+    { id: 'c11t2', t: 'فضای دیسک را با df -h بررسی کنید.', chk: x => x.hist.some(h=>/\bdf\b/.test(h)) },
+    { id: 'c11t3', t: 'حجم کل پوشه خانه را با du -sh ~ ببینید.', chk: x => x.hist.some(h=>/\bdu\b/.test(h)) },
+    { id: 'c11t4', t: 'وضعیت حافظه را با free -h چک کنید.', chk: x => x.hist.some(h=>/\bfree\b/.test(h)) },
+    { id: 'c11t5', t: 'اتصال اینترنت را با ping google.com تست کنید.', chk: x => x.hist.some(h=>/\bping\b/.test(h) && /google/.test(h)) },
+    { id: 'c11t6', t: 'تقویم این ماه را با cal ببینید.', chk: x => x.ran(/^cal\s*$/) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c12', icon: '🗜️', title: 'فشرده‌سازی و آرشیو', sub: 'بسته‌بندی حرفه‌ای فایل‌ها با tar — مهارتی که هر روز در انتقال فایل و بکاپ‌گیری لازم می‌شود.',
+  sections: [
+    { h: 'tar — استاندارد آرشیو دنیای لینوکس',
+      p: [
+        'دو کار متفاوت را نباید اشتباه گرفت: آرشیو کردن یعنی جمع کردن چند فایل در یک فایل واحد، و فشرده‌سازی یعنی کوچک کردن حجم. دستور tar هر دو را با هم انجام می‌دهد — برای همین پسوند محبوب آن tar.gz. است که یعنی «آرشیو tar شده و بعد با gzip فشرده شده».',
+        'گزینه‌های tar را اینطور حفظ کنید: c یعنی Create (ساخت آرشیو)، x یعنی eXtract (استخراج)، t یعنی lisT (فقط دیدن محتوا)، f یعنی فایل مقصد (همیشه اول می‌آید: tar -czf نام‌فایل)، z یعنی فشرده‌سازی با gzip و v یعنی verbose (نمایش فایل‌ها در حین کار). حافظه معروف: «Cats eXpect Treats Frequently» یا به فارسی: ساز، استخراج، لیست!'
+      ],
+      code: '$ tar -czf docs.tar.gz documents   ← ساخت آرشیو فشرده\n$ tar -tzf docs.tar.gz             ← دیدن محتوای آرشیو\n$ tar -xzf docs.tar.gz             ← استخراج همین‌جا\n$ tar -xzf docs.tar.gz -C backup   ← استخراج در پوشه backup' },
+    { h: 'gzip و zip',
+      p: [
+        'دستور gzip یک فایل را مستقیم فشرده می‌کند: gzip report.txt فایل را به report.txt.gz تبدیل می‌کند (فایل اصلی حذف می‌شود!). برگشتش gunzip است: gunzip report.txt.gz فایل اصلی را برمی‌گرداند. gzip برای تک‌فایل عالی است؛ برای پوشه‌ها باید اول با tar آرشیو کنید.',
+        'فرمت zip هم که همه می‌شناسند در لینوکس پشتیبانی می‌شود: zip archive.zip file1 file2 ساخت و unzip archive.zip استخراج. با گزینه d- در unzip می‌توانید مقصد استخراج را تعیین کنید: unzip archive.zip -d /tmp/. نکته: فایل‌های tar.gz و zip ساخته‌شده در این شبیه‌ساز واقعا قابلیت استخراج دارند — امتحان کنید!'
+      ],
+      code: '$ gzip report.txt        ← فشرده‌سازی (فایل اصلی می‌رود)\n$ gunzip report.txt.gz   ← برگشت به حالت اول\n$ zip backup.zip *.txt   ← آرشیو zip\n$ unzip backup.zip -d tmp-dir' },
+    { h: 'کاربرد واقعی: بکاپ‌گیری',
+      p: [
+        'رایج‌ترین کاربرد tar در دنیای واقعی، بکاپ (پشتیبان‌گیری) است. یک دستور می‌تواند کل پروژه یا حتی کل سایت را در یک فایل بسته‌بندی کند تا به سرور دیگر یا فضای ابری منتقل شود: tar -czf backup-2024.tar.gz /var/www/site.',
+        'حرفه‌ای‌ها این کار را در اسکریپت می‌نویسند و با کرون‌جاب (زمان‌بند) هر شب اجرا می‌کنند. در فصل بعد یاد می‌گیرید چطور چنین اسکریپتی بنویسید — و بله، همه ابزارش را همین حالا دارید!'
+      ],
+      code: '$ tar -czf my-backup.tar.gz documents downloads\n$ ls -lh my-backup.tar.gz   ← حجم بکاپ را ببینید' }
+  ],
+  cmds: [
+    { c: 'tar -czf docs.tar.gz documents', d: 'ساخت آرشیو فشرده از یک پوشه' },
+    { c: 'tar -tzf docs.tar.gz', d: 'مشاهده محتوای آرشیو بدون استخراج' },
+    { c: 'tar -xzf docs.tar.gz', d: 'استخراج آرشیو در مسیر فعلی' },
+    { c: 'tar -xzf docs.tar.gz -C backup', d: 'استخراج در پوشه مشخص' },
+    { c: 'gzip report.txt', d: 'فشرده‌سازی یک فایل' },
+    { c: 'gunzip report.txt.gz', d: 'باز کردن فایل فشرده' },
+    { c: 'zip files.zip a.txt b.txt', d: 'ساخت آرشیو zip' },
+    { c: 'unzip files.zip -d folder', d: 'استخراج آرشیو zip' }
+  ],
+  warn: 'دستور gzip فایل اصلی را جایگزین می‌کند! اگر مطمئن نیستید، اول از فایل کپی بگیرید یا از tar استفاده کنید که فایل اصلی را دست نمی‌زند.',
+  tip: 'گزینه v- را به tar اضافه کنید تا ببینید دقیقا چه فایل‌هایی در حال آرشیو یا استخراج هستند: tar -czvf و tar -xzf v. برای آرشیوهای بزرگ خیلی آرام‌بخش است!',
+  tasks: [
+    { id: 'c12t1', t: 'از پوشه documents یک آرشیو فشرده بسازید: tar -czf docs.tar.gz documents', chk: x => x.isFile('~/docs.tar.gz') },
+    { id: 'c12t2', t: 'محتوای آرشیو را بدون استخراج ببینید: tar -tzf docs.tar.gz', chk: x => x.hist.some(h=>/\btar\b/.test(h) && /-t/.test(h.replace(/-czvf|-xzf|-czf/g,''))) && x.hist.some(h=>/tar\s+(-\w*)*t/.test(h)) },
+    { id: 'c12t3', t: 'پوشه‌ای به نام backup بسازید و آرشیو را داخل آن استخراج کنید (با -C).', chk: x => x.isFile('~/backup/documents/report.txt') },
+    { id: 'c12t4', t: 'فایل documents/notes.md را با gzip فشرده کنید.', chk: x => x.hist.some(h=>/^gzip\s+/.test(h)) },
+    { id: 'c12t5', t: 'با gunzip فایل را برگردانید و با cat محتوایش را چک کنید.', chk: x => x.hist.some(h=>/^gunzip\s+/.test(h)) }
+  ]
+});
+
+CHAPTERS.push({
+  id: 'c13', icon: '📜', title: 'اسکریپت‌نویسی بش — پایه', sub: 'نقطه اوج مسیر: نوشتن اولین برنامه‌های خودتان در ترمینال و خودکارسازی کارها.',
+  sections: [
+    { h: 'اولین اسکریپت',
+      p: [
+        'اسکریپت بش چیزی نیست جز یک فایل متنی که خط به خط دستورهای ترمینال داخلش است! خط اول همیشه #!/bin/bash است که به آن Shebang می‌گویند و به سیستم می‌گوید «این فایل را با بش اجرا کن». خطوطی که با # شروع شوند توضیح (کامنت) هستند و اجرا نمی‌شوند.',
+        'یک فایل بسازید (با nano یا echo)، دستورها را داخلش بنویسید و به دو روش اجرا کنید: bash script.sh که مستقیم آن را به بش می‌سپارد، یا روش حرفه‌ای: chmod +x به فایل بدهید و با ./script.sh اجرا کنید. علامت ./ یعنی «داخل همین پوشه» — چون پوشه فعلی به‌طور پیش‌فرض در PATH نیست، باید صریح بگویید.'
+      ],
+      code: '#!/bin/bash\n# اولین اسکریپت من\necho "Hello, Linux!"\ndate\nls ~' },
+    { h: 'متغیرها',
+      p: [
+        'متغیر در بش بدون کلمه کلیدی تعریف می‌شود: NAME="Ali" (بدون فاصله دور علامت =!). برای خواندن مقدار، علامت دلار می‌گذارید: echo "Hello $NAME". متغیرهای سیستم هم از قبل موجودند: $USER نام کاربر، $HOME مسیر خانه و $PWD مسیر فعلی.',
+        'نکته مهم برای بستن رشته‌ها: از کوتیشن دوتایی " استفاده کنید تا متغیرها جاگذاری (Interpolate) شوند. اگر از کوتیشن تک استفاده کنید، $NAME به جای مقدار، خود متن $NAME چاپ می‌شود!'
+      ],
+      code: '#!/bin/bash\nNAME="Linux Learner"\necho "Hello, $NAME!"\necho "You are: $USER"\necho "Home: $HOME"' },
+    { h: 'شرط if و حلقه for',
+      p: [
+        'شرط‌ها به شکل if [ شرط ]; then ... fi نوشته می‌شوند (fi همان if برعکس است — پایان شرط). شرط‌های رایج: f- فایل-موجود-است، d- پوشه-موجود-است، == برابری رشته‌ها و =! نابرابری. فاصله‌ها دور براکت اجباری‌اند: [ -f file ] درست، [-f file] غلط!',
+        'حلقه for به شکل for x in لیست; do ... done است: برای هر آیتم لیست، بلوک do را یک بار اجرا کن. ترکیب حلقه با دستورها قدرت واقعی خودکارسازی را می‌سازد — مثلا ساخت ده فایل با یک حلقه، یا پردازش همه فایل‌های یک پوشه.'
+      ],
+      code: '#!/bin/bash\nif [ -f welcome.txt ]; then\n  echo "welcome.txt exists!"\nelse\n  echo "file not found"\nfi\n\nfor name in ali sara reza; do\n  mkdir -p team/$name\n  echo "created team/$name"\ndone' },
+    { h: 'چرا اسکریپت‌نویسی قدرت است؟',
+      p: [
+        'هر کاری که در این ۱۳ فصل یاد گرفتید، حالا می‌تواند در یک فایل جمع شود و با یک دستور اجرا شود: بکاپ‌گیری خودکار، ساخت پروژه‌های جدید با ساختار آماده، بررسی سلامت سرور، پاک‌سازی موقت‌ها و صدها کار تکراری دیگر.',
+        'بسیاری از ابزارهای بزرگ دنیای IT (از دیپلوی خودکار گرفته تا هوش مصنوعی‌های خط فرمان) در نهایت همین اسکریپت‌های بش هستند که به هم زنجیره شده‌اند. مسیر یادگیری شما از اینجا به کجا؟ متغیرهای پیشرفته ($1 برای آرگومان‌ها)، توابع، grep و sed و awk در سطح حرفه‌ای، و بعد زبان‌هایی مثل Python که در همین ترمینال اجرا می‌شوند.'
+      ],
+      code: '# یک اسکریپت بکاپ واقعی:\n#!/bin/bash\nDATE=$(date +%Y-%m-%d)\ntar -czf backup-$DATE.tar.gz documents\necho "Backup saved: backup-$DATE.tar.gz"' }
+  ],
+  cmds: [
+    { c: 'nano hello.sh', d: 'ساخت فایل اسکریپت با ویرایشگر' },
+    { c: 'bash hello.sh', d: 'اجرای اسکریپت با بش' },
+    { c: 'chmod +x hello.sh', d: 'اجرایی کردن اسکریپت' },
+    { c: './hello.sh', d: 'اجرای اسکریپت اجرایی' },
+    { c: 'echo \'NAME="Ali"\' > g.sh', d: 'ساخت سریع اسکریپت با echo' },
+    { c: 'cat hello.sh', d: 'بازبینی محتوای اسکریپت' }
+  ],
+  tip: 'همیشه اول اسکریپت را با bash script.sh تست کنید؛ اگر درست کار کرد بعد chmod +x بدهید و اجرای مستقیم ./script.sh را امتحان کنید. و رسم حرفه‌ای: برای اسکریپت‌ها پسوند .sh بگذارید.',
+  warn: 'فاصله دور علامت = در تعریف متغیر ممنوع است! NAME = "Ali" خطا می‌دهد؛ درستش NAME="Ali" بدون هیچ فاصله‌ای است. رایج‌ترین اشتباه مبتدی‌های بش همین است.',
+  tasks: [
+    { id: 'c13t1', t: 'اسکریپتی به نام hello.sh بسازید که echo "Hello Linux!" چاپ کند (با nano یا echo >).', chk: x => { const c = x.read('~/hello.sh'); return c && /echo/.test(c); } },
+    { id: 'c13t2', t: 'اسکریپت را با bash hello.sh اجرا کنید.', chk: x => x.hist.some(h=>/\b(bash|sh)\s+hello\.sh/.test(h)) },
+    { id: 'c13t3', t: 'با chmod +x اجرایی‌اش کنید و با ./hello.sh اجرا کنید.', chk: x => x.hist.some(h=>/\.\s*\/hello\.sh/.test(h)) && x.exec('~/hello.sh') },
+    { id: 'c13t4', t: 'اسکریپت greet.sh بسازید که از متغیر استفاده کند (مثلا NAME="Ali" و echo "Hello $NAME") و اجرایش کنید.', chk: x => { const c = x.read('~/greet.sh'); return c && /\$\w+/.test(c) && x.hist.some(h=>/greet\.sh/.test(h) && /(bash|sh\s|\.\/)/.test(h)); } },
+    { id: 'c13t5', t: 'اسکریپت loop.sh بسازید که یک حلقه for داشته باشد (مثلا ساخت چند پوشه) و اجرایش کنید.', chk: x => { const c = x.read('~/loop.sh'); return c && /\bfor\b/.test(c) && x.hist.some(h=>/loop\.sh/.test(h) && /(bash|sh\s|\.\/)/.test(h)); } }
+  ]
+});
+/* ============================================================
+   آزمون نهایی — سوالات تئوری و تمرین‌های عملی
+   ============================================================ */
+const EXAM_Q = [
+  { q: 'کدام دستور مسیر پوشه فعلی را نشان می‌دهد؟',
+    o: ['cd', 'pwd', 'ls', 'home'], a: 1,
+    e: 'pwd یعنی Print Working Directory و همیشه مسیر کامل پوشه فعلی را چاپ می‌کند.' },
+  { q: 'برای دیدن فایل‌های مخفی (مثل ‎.bashrc) از کدام دستور استفاده می‌شود؟',
+    o: ['ls -l', 'ls -h', 'ls -a', 'ls -r'], a: 2,
+    e: 'گزینه a- (all) فایل‌هایی که اسمشان با نقطه شروع می‌شود را هم نمایش می‌دهد.' },
+  { q: 'چطور می‌توان ساختار پوشه‌ای a/b/c را که هیچ‌کدام وجود ندارند، یک‌جا ساخت؟',
+    o: ['mkdir a/b/c', 'mkdir -p a/b/c', 'mkdir -r a/b/c', 'touch a/b/c'], a: 1,
+    e: 'گزینه p- در mkdir پدرهای مفقود را هم می‌سازد (parents).' },
+  { q: 'برای حذف کامل یک پوشه غیرخالی همراه محتویاتش کدام دستور درست است؟',
+    o: ['rm file', 'rmdir folder', 'rm -r folder', 'del folder'], a: 2,
+    e: 'r- یعنی recursive؛ بدون آن پوشه غیرخالی حذف نمی‌شود. rmdir فقط پوشه خالی حذف می‌کند.' },
+  { q: 'کدام دستور یک پوشه را با همه محتویاتش کپی می‌کند؟',
+    o: ['cp folder dest', 'cp -r folder dest', 'mv folder dest', 'copy -all folder'], a: 1,
+    e: 'cp برای پوشه‌ها حتما به r- نیاز دارد وگرنه خطای «omitting directory» می‌دهد.' },
+  { q: 'خروجی دستور chmod 755 script.sh چیست؟',
+    o: ['rwxr-xr-x', 'rw-r--r--', 'rwxrwxrwx', 'r--r--r--'], a: 0,
+    e: '7=rwx، 5=r-x، 5=r-x. عدد ۷۵۵ استاندارد اسکریپت‌هاست.' },
+  { q: 'کدام دستور ۱۰ خط آخر یک فایل را نشان می‌دهد؟',
+    o: ['head -n 10', 'tail -n 10', 'cat -10', 'last 10'], a: 1,
+    e: 'tail انتهای فایل را می‌دهد (پیش‌فرض ۱۰ خط) و head ابتدای فایل را.' },
+  { q: 'برای جستجوی یک کلمه داخل محتوای فایل‌ها کدام دستور به کار می‌رود؟',
+    o: ['find', 'grep', 'locate', 'search'], a: 1,
+    e: 'grep داخل محتوای فایل‌ها جستجو می‌کند؛ find خود فایل‌ها را بر اساس نام و ویژگی پیدا می‌کند.' },
+  { q: 'علامت پایپ (|) در ترمینال چه کاری انجام می‌دهد؟',
+    o: ['خروجی یک دستور را به ورودی دستور بعد می‌فرستد', 'دو دستور را پشت هم اجرا می‌کند', 'دستور را در پس‌زمینه اجرا می‌کند', 'فایل می‌سازد'], a: 0,
+    e: 'پایپ خروجی استاندارد دستور قبلی را به ورودی استاندارد دستور بعدی وصل می‌کند.' },
+  { q: 'تفاوت اصلی >> با > چیست؟',
+    o: ['هیچ تفاوتی ندارند', '>> خطاها را ذخیره می‌کند', '>> به انتهای فایل اضافه می‌کند ولی > بازنویسی می‌کند', '>> فقط برای پوشه‌هاست'], a: 2,
+    e: '> فایل را از نو می‌نویسد و محتوای قبلی را پاک می‌کند؛ >> Append می‌کند.' },
+  { q: 'برای تغییر مالک (Owner) یک فایل کدام دستور استفاده می‌شود؟',
+    o: ['chmod', 'chown', 'chgrp', 'mv'], a: 1,
+    e: 'chown مالک و گروه فایل را عوض می‌کند و معمولا به sudo نیاز دارد؛ chmod دسترسی‌ها را عوض می‌کند.' },
+  { q: 'کدام دستور همه پروسه‌های کل سیستم را با جزئیات نشان می‌دهد؟',
+    o: ['ps', 'top', 'ps aux', 'jobs'], a: 2,
+    e: 'ps aux همه پروسه‌های همه کاربران را با جزئیات (CPU، RAM، مالک) فهرست می‌کند. top هم زنده است.' },
+  { q: 'دستور kill -9 1234 چه معنایی دارد؟',
+    o: ['پروسه 1234 را با خشونت کامل (SIGKILL) می‌کشد', '۹ بار سیگنال می‌فرستد', 'پروسه را متوقف می‌کند نه می‌کشد', 'پروسه ۹ ثانیه‌ای می‌خواباند'], a: 0,
+    e: 'سیگنال 9 یعنی SIGKILL؛ پروسه بدون فرصت جمع‌کردن کارها بلافاصله از بین می‌رود.' },
+  { q: 'در اوبونتو کدام دستور یک بسته نرم‌افزاری را نصب می‌کند؟',
+    o: ['apt install package', 'install package', 'yum package', 'dpkg get package'], a: 0,
+    e: 'apt مدیر بسته اوبونتو/دبیان است و برای نصب به sudo نیاز دارد: sudo apt install package.' },
+  { q: 'خط اول هر اسکریپت بش چه چیزی باید باشد؟',
+    o: ['//start', '#!/bin/bash', '$bash', 'run bash'], a: 1,
+    e: 'این خط Shebang نام دارد و به سیستم می‌گوید اسکریپت را با کدام مفسر اجرا کند.' },
+  { q: 'برای استخراج فایل archive.tar.gz کدام دستور درست است؟',
+    o: ['tar -czf archive.tar.gz', 'tar -xzf archive.tar.gz', 'tar -tzf archive.tar.gz', 'untar archive.tar.gz'], a: 1,
+    e: 'x یعنی eXtract؛ c برای ساخت آرشیو و t فقط برای دیدن لیست محتوا است.' },
+  { q: 'چرا برای اجرای دستورهای مدیریتی مثل apt install از sudo استفاده می‌کنیم؟',
+    o: ['چون سریع‌تر اجرا می‌شود', 'چون این دستورها به دسترسی مدیر (root) نیاز دارند', 'چون sudo خروجی را رنگی می‌کند', 'چون بدون sudo خط فرمان بسته می‌شود'], a: 1,
+    e: 'sudo دستور را با دسترسی root اجرا می‌کند؛ تغییرات سیستمی فقط با این دسترسی مجاز است.' },
+  { q: 'کدام دستور حجم کل یک پوشه را به صورت خلاصه و خوانا نشان می‌دهد؟',
+    o: ['df -h', 'du -sh پوشه', 'free -h', 'ls -lh'], a: 1,
+    e: 'du اندازه پوشه‌ها را حساب می‌کند؛ s یعنی خلاصه (فقط جمع کل) و h یعنی اعداد خوانا.' },
+  { q: 'در تعریف متغیر در بش کدام حالت درست است؟',
+    o: ['NAME = "Ali" (با فاصله)', 'NAME="Ali" (بدون فاصله)', 'let NAME="Ali"', 'var NAME="Ali"'], a: 1,
+    e: 'دور علامت = هیچ فاصله‌ای مجاز نیست؛ این رایج‌ترین خطای مبتدی‌هاست.' },
+  { q: 'خروجی دستور echo "Salam" > file.txt چه می‌شود؟',
+    o: ['کلمه Salam در صفحه چاپ می‌شود', 'کلمه Salam در file.txt ذخیره می‌شود (فایل از نو نوشته می‌شود)', 'خطای دستور', 'به انتهای file.txt اضافه می‌شود'], a: 1,
+    e: '> خروجی را به فایل ریدایرکت می‌کند؛ اگر فایل موجود باشد بازنویسی می‌شود.' }
+];
+
+const EXAM_PRACTICAL = [
+  { id: 'x1', t: 'با دستور pwd مسیر فعلی خود را نشان دهید.',
+    chk: x => x.ran(/^pwd\s*$/) },
+  { id: 'x2', t: 'در پوشه خانه، پوشه‌ای به نام exam بسازید.',
+    chk: x => x.isDir('~/exam') },
+  { id: 'x3', t: 'داخل پوشه exam فایلی به نام result.txt بسازید.',
+    chk: x => x.isFile('~/exam/result.txt') },
+  { id: 'x4', t: 'محتوای فایل welcome.txt (در خانه) را به داخل exam/result.txt کپی کنید.',
+    chk: x => { const r = x.read('~/exam/result.txt'), w = x.read('~/welcome.txt'); return (r && w && r === w) || x.hist.some(h=>/^cp\b/.test(h) && /welcome\.txt/.test(h) && /result\.txt/.test(h)); } },
+  { id: 'x5', t: 'به فایل exam/result.txt دسترسی 644 بدهید (chmod 644).',
+    chk: x => x.mode('~/exam/result.txt') === 'rw-r--r--' },
+  { id: 'x6', t: 'یک پوشه مخفی به نام secret. داخل exam بسازید (با نقطه اول!).',
+    chk: x => x.isDir('~/exam/.secret') },
+  { id: 'x7', t: 'با grep کلمه Linux را در فایل welcome.txt جستجو کنید.',
+    chk: x => x.hist.some(h=>/\bgrep\b/.test(h) && /welcome\.txt/.test(h)) },
+  { id: 'x8', t: 'از کل پوشه exam یک آرشیو فشرده به نام exam.tar.gz بسازید.',
+    chk: x => x.isFile('~/exam.tar.gz') || x.isFile('~/exam/exam.tar.gz') },
+  { id: 'x9', t: 'یک اسکریپت hello.sh در خانه بسازید که چیزی چاپ کند، اجرایی‌اش کنید (chmod +x) و با ./hello.sh اجرا کنید.',
+    chk: x => x.isFile('~/hello.sh') && x.exec('~/hello.sh') && x.hist.some(h=>/\.\s*\/hello\.sh/.test(h)) },
+  { id: 'x10', t: 'در پایان، کل پوشه exam را با rm -r حذف کنید (آرشیو شما امن است!).',
+    chk: x => x.hist.some(h=>/\brm\b/.test(h) && /exam/.test(h)) && !x.exists('~/exam') }
+];
+
+const EXAM_CONFIG = {
+  timeSec: 30 * 60,
+  mcqPoint: 1,
+  practicalPoint: 2,
+  passPercent: 70
+};
+/* ============================================================
+   UI — ترمینال، ناوبری، فصل‌ها، تمرین‌ها
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- Toast ---------- */
+function toast(msg, kind){
+  const d = document.createElement('div');
+  d.className = 'toast' + (kind ? ' ' + kind : '');
+  d.textContent = msg;
+  $('toasts').appendChild(d);
+  setTimeout(()=>{ d.classList.add('out'); setTimeout(()=>d.remove(), 350); }, 3400);
+}
+
+/* ---------- Modal ---------- */
+function openModal(html){
+  $('modal-card').innerHTML = html;
+  $('modal-overlay').classList.remove('hidden');
+}
+function closeModal(){ $('modal-overlay').classList.add('hidden'); }
+$('modal-overlay').addEventListener('click', e=>{ if(e.target === $('modal-overlay')) closeModal(); });
+
+/* ---------- Terminal ---------- */
+const termRoot = $('term-root');
+const termOut = $('term-out');
+const termInput = $('term-input');
+const drawerEl = $('term-drawer');
+let drawerOpen = false;
+
+function shortPath(){
+  const p = vfs.cwd;
+  if(p === S.home) return '~';
+  if(p.startsWith(S.home + '/')) return '~' + p.slice(S.home.length);
+  return p || '/';
+}
+function promptHTML(){
+  return '<span class="p-user">' + esc(S.user) + '</span><span class="p-at">@</span><span class="p-host">' + esc(S.host) +
+    '</span><span class="p-sep">:</span><span class="p-path">' + esc(shortPath()) + '</span><span class="p-end">' +
+    (S.user === 'root' ? '#' : '$') + '</span>&nbsp;';
+}
+function updatePrompt(){ $('term-prompt').innerHTML = promptHTML();
+}
+function tLine(html){
+  const d = document.createElement('div');
+  d.className = 'tl';
+  d.innerHTML = html;
+  termOut.appendChild(d);
+  return d;
+}
+function tText(text, cls){
+  const d = document.createElement('div');
+  d.className = 'tl' + (cls ? ' ' + cls : '');
+  d.textContent = text;
+  termOut.appendChild(d);
+  return d;
+}
+function termScroll(){ termOut.scrollTop = termOut.scrollHeight; }
+function welcomeBanner(){
+  tText('┌──────────────────────────────────────────────────┐');
+  tText('│  🐧  Linux Terminal Academy — Simulator v1.0      │');
+  tText('│  همه دستورها در محیطی امن و شبیه‌سازی شده اجرا     │');
+  tText('│  می‌شوند؛ سیستم واقعی شما دست‌نخورده می‌ماند.        │');
+  tText('└──────────────────────────────────────────────────┘');
+  tText("Type 'help' to see all commands — دستور help را بزنید", 't-info');
+  tText('برای شروع، فصل‌ها را از منوی «فصل‌ها» دنبال کنید ✨', 't-dim');
+  tText('');
+  termScroll();
+}
+function printPromptEcho(cmd){
+  tLine(promptHTML() + '<span style="color:#e6edf3">' + esc(cmd) + '</span>');
+}
+function renderItems(items){
+  for(const it of items){
+    if(it.type === 'out') tText(it.text);
+    else if(it.type === 'html') tLine(it.html);
+    else if(it.type === 'err') tText(it.text, 't-err');
+    else if(it.type === 'ok'){ /* silent success */ }
+    else if(it.type === 'clear'){ termOut.innerHTML = ''; }
+    else if(it.type === 'nano'){ openNano(it.path); }
+    else if(it.type === 'exit'){ tText(it.text || 'logout', 't-dim'); }
+  }
+  termScroll();
+}
+function submitCommand(raw){
+  const cmd = raw != null ? raw : termInput.value;
+  if(!cmd.trim()) { printPromptEcho(''); termScroll(); termInput.value=''; return; }
+  printPromptEcho(cmd);
+  termInput.value = '';
+  const items = execLine(cmd);
+  renderItems(items);
+  updatePrompt();
+  afterCommand();
+}
+
+/* ---------- Input events ---------- */
+let histIdx = -1, savedInput = '';
+termInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); histIdx = -1; submitCommand(); }
+  else if(e.key === 'ArrowUp'){
+    e.preventDefault();
+    if(!S.history.length) return;
+    if(histIdx === -1){ savedInput = termInput.value; histIdx = S.history.length - 1; }
+    else histIdx = Math.max(0, histIdx - 1);
+    termInput.value = S.history[histIdx];
+    setTimeout(()=>{ termInput.setSelectionRange(termInput.value.length, termInput.value.length); }, 0);
+  }
+  else if(e.key === 'ArrowDown'){
+    e.preventDefault();
+    if(histIdx === -1) return;
+    histIdx++;
+    if(histIdx >= S.history.length){ histIdx = -1; termInput.value = savedInput; }
+    else termInput.value = S.history[histIdx];
+  }
+  else if(e.key === 'Tab'){ e.preventDefault(); tabComplete(); }
+  else if(e.key === 'l' && e.ctrlKey){ e.preventDefault(); termOut.innerHTML = ''; }
+  else if(e.key === 'c' && e.ctrlKey){
+    e.preventDefault();
+    tLine(promptHTML() + '<span style="color:#e6edf3">' + esc(termInput.value) + '</span><span class="t-dim">^C</span>');
+    termInput.value = ''; histIdx = -1; termScroll();
+  }
+});
+function tabComplete(){
+  const v = termInput.value;
+  const toks = v.split(/(\s+)/);
+  const idxLast = v.length;
+  const before = v.slice(0, idxLast);
+  const m = before.match(/(\S*)$/);
+  const frag = m ? m[1] : '';
+  if(before.trim().split(/\s+/).length <= 1 && !/\s/.test(before.trim())){
+    const matches = CMDS_ORDER.filter(c=>c.startsWith(frag)).sort();
+    if(matches.length === 1){ termInput.value = matches[0] + ' '; }
+    else if(matches.length > 1){ tText(matches.join('  '), 't-dim'); termScroll(); }
+    return;
+  }
+  const slash = frag.lastIndexOf('/');
+  const dirPart = slash >= 0 ? frag.slice(0, slash + 1) : '';
+  const namePart = slash >= 0 ? frag.slice(slash + 1) : frag;
+  const dn = vfs.getNode(dirPart || '.');
+  if(!dn || dn.t !== 'd') return;
+  const entries = vfs.entryList(dn, true).filter(k=>k.startsWith(namePart));
+  if(entries.length === 1){
+    const isDir = dn.ch[entries[0]] && dn.ch[entries[0]].t === 'd';
+    const full = dirPart + entries[0] + (isDir ? '/' : ' ');
+    termInput.value = before.slice(0, before.length - frag.length) + full;
+  } else if(entries.length > 1){
+    tText(entries.join('  '), 't-dim'); termScroll();
+  }
+}
+termOut.addEventListener('click', ()=> termInput.focus());
+termInput.focus();
+
+/* ---------- Task checking ---------- */
+function expT(p){ return p.startsWith('~') ? S.home + p.slice(1) : p; }
+const TCTX = {
+  hist: S.history,
+  ran: re => S.history.some(h=>re.test(h)),
+  isFile: p => vfs.isFile(expT(p)),
+  isDir: p => vfs.isDir(expT(p)),
+  exists: p => vfs.exists(expT(p)),
+  read: p => vfs.read(expT(p)),
+  mode: p => vfs.mode(expT(p)),
+  exec: p => { const n = vfs.getNode(expT(p)); return !!n && n.m && n.m[2] === 'x'; },
+  edited: p => { const n = vfs.getNode(expT(p)); return !!n && !!n.ed; },
+  installed: nm => S.installed.has(nm)
+};
+const ALL_TASKS = [];
+CHAPTERS.forEach(ch => ch.tasks.forEach(t => ALL_TASKS.push(t)));
+function taskCtxOK(t){ try { return !!t.chk(TCTX); } catch(e){ return false; } }
+function afterCommand(){
+  let changed = false;
+  for(const t of ALL_TASKS){
+    if(S.done.has(t.id)) continue;
+    if(taskCtxOK(t)){ S.done.add(t.id); changed = true; toast('✅ تمرین انجام شد: ' + t.t.slice(0, 70) + (t.t.length > 70 ? '…' : '')); }
+  }
+  if(S.exam.active && !S.exam.submitted) examPracticalCheck();
+  if(changed){ saveProgress(); updateProgress(); renderSidebar(); refreshTasksCard(); }
+}
+
+/* ---------- Progress / storage ---------- */
+function saveProgress(){
+  try {
+    localStorage.setItem('lta_done', JSON.stringify(Array.from(S.done)));
+    localStorage.setItem('lta_xdone', JSON.stringify(Array.from(S.xdone)));
+  } catch(e){}
+}
+function loadProgress(){
+  S.done = new Set();
+  S.xdone = new Set();
+  try {
+    const d = JSON.parse(localStorage.getItem('lta_done') || '[]');
+    const x = JSON.parse(localStorage.getItem('lta_xdone') || '[]');
+    d.forEach(i=>S.done.add(i)); x.forEach(i=>S.xdone.add(i));
+  } catch(e){}
+}
+function updateProgress(){
+  const total = ALL_TASKS.length;
+  const done = ALL_TASKS.filter(t=>S.done.has(t.id)).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  $('pbar-fill').style.width = pct + '%';
+  $('ptext').textContent = pct + '%';
+}
+function refreshTasksCard(){
+  const host = $('tasks-card-host');
+  if(host && typeof S.curCh === 'number'){
+    const ch = CHAPTERS[S.curCh];
+    if(ch){ host.innerHTML = tasksHTML(ch); bindTasks(host); }
+  }
+}
+
+/* ---------- Views ---------- */
+let curView = 'home';
+function switchView(name){
+  curView = name;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  $('view-' + name).classList.add('active');
+  document.querySelectorAll('#mainnav a').forEach(a=>a.classList.toggle('active', a.dataset.nav === name));
+  if(name === 'terminal'){
+    $('term-full-host').appendChild(termRoot);
+    drawerEl.style.display = 'none';
+    termInput.focus();
+  } else if(name === 'course' || name === 'exam'){
+    $('drawer-body').appendChild(termRoot);
+    drawerEl.style.display = '';
+    if(name === 'exam') renderExam();
+    if(name === 'course' && innerWidth > 1020 && !drawerOpen){ setDrawer(true); }
+  } else {
+    drawerEl.style.display = 'none';
+  }
+  window.scrollTo({ top: 0 });
+}
+function setDrawer(open){
+  drawerOpen = open;
+  drawerEl.classList.toggle('open', open);
+  if(open) setTimeout(()=>termInput.focus(), 300);
+}
+$('drawer-handle').addEventListener('click', ()=> setDrawer(!drawerOpen));
+document.addEventListener('keydown', e=>{
+  if(e.ctrlKey && (e.key === '`' || e.code === 'Backquote')){
+    e.preventDefault();
+    if(curView === 'course' || curView === 'exam') setDrawer(!drawerOpen);
+    else if(curView === 'terminal') termInput.focus();
+  }
+});
+document.querySelectorAll('[data-nav]').forEach(a=>{
+  a.addEventListener('click', ()=> switchView(a.dataset.nav));
+});
+$('btn-hero-term').addEventListener('click', ()=> switchView('terminal'));
+document.querySelectorAll('.qc').forEach(b=>{
+  b.addEventListener('click', ()=>{ submitCommand(b.dataset.q); });
+});
+
+/* ---------- Sidebar & Chapters ---------- */
+function chapterDone(ch){ return ch.tasks.every(t=>S.done.has(t.id)); }
+function renderSidebar(){
+  const sb = $('sidebar');
+  let html = '<div class="sb-head"><b>📚 فصل‌های دوره</b><span>' + CHAPTERS.length + ' فصل</span></div>';
+  CHAPTERS.forEach((ch, i)=>{
+    const done = chapterDone(ch);
+    const active = S.curCh === i && curView === 'course';
+    html += '<div class="sb-item' + (done ? ' done' : '') + (active ? ' active' : '') + '" data-ch="' + i + '">' +
+      '<span class="sb-num">' + (i + 1) + '</span><span class="sb-tt">' + ch.title + '</span>' +
+      '<span class="sb-status">' + (done ? '✔' : '') + '</span></div>';
+  });
+  sb.innerHTML = html;
+  sb.querySelectorAll('.sb-item').forEach(it=>{
+    it.addEventListener('click', ()=>{ switchView('course'); showChapter(+it.dataset.ch); });
+  });
+}
+function codeblockHTML(code){
+  const lines = esc(code).split('\n').map(l=>{
+    if(/^\s*\$/.test(l)) return '<span class="o">' + l + '</span>';
+    if(/^\s*#/.test(l)) return '<span class="cm">' + l + '</span>';
+    return l;
+  });
+  return '<div class="codeblock">' + lines.join('\n') + '</div>';
+}
+function tasksHTML(ch){
+  const doneCount = ch.tasks.filter(t=>S.done.has(t.id)).length;
+  let html = '<div class="tasks-card" id="tasks-card-host-inner">' +
+    '<div class="tasks-head"><h4>🎯 تمرین فصل — انجام دهید تا تیک بخورد <span>' + doneCount + ' / ' + ch.tasks.length + '</span></h4>' +
+    '<button class="btn btn-primary btn-sm" id="open-term-btn">⌨️ باز کردن ترمینال تمرین</button></div>';
+  ch.tasks.forEach(t=>{
+    const done = S.done.has(t.id);
+    html += '<div class="task' + (done ? ' done' : '') + '"><span class="chk">✓</span><span class="t-desc">' + t.t + '</span></div>';
+  });
+  html += '<div style="margin-top:14px;font-size:12.5px;color:var(--mut)">💡 تمرین‌ها به‌صورت خودکار بررسی می‌شوند؛ کافی است دستورها را در ترمینال اجرا کنید.</div></div>';
+  return html;
+}
+function bindTasks(host){
+  const btn = host.querySelector('#open-term-btn');
+  if(btn) btn.addEventListener('click', ()=>{ setDrawer(true); setTimeout(()=>termInput.focus(), 350); });
+}
+function showChapter(i){
+  S.curCh = i;
+  const ch = CHAPTERS[i];
+  const cv = $('chapter-view');
+  let html = '<div class="ch-head"><div class="ch-crumb">' +
+    '<span class="chip">فصل ' + (i + 1) + ' از ' + CHAPTERS.length + '</span>' +
+    (chapterDone(ch) ? '<span class="chip" style="border-color:rgba(45,212,167,.4);color:var(--grn)">✔ این فصل را کامل کرده‌اید</span>' : '') +
+    '</div>' +
+    '<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div class="ch-icon">' + ch.icon + '</div>' +
+    '<div><h2>' + ch.title + '</h2></div></div>' +
+    '<p class="ch-sub">' + ch.sub + '</p></div><div class="ch-body">';
+  ch.sections.forEach(sec=>{
+    html += '<div class="sec"><h3>' + sec.h + '</h3>';
+    (sec.p || []).forEach(p=>{ html += '<p>' + p + '</p>'; });
+    if(sec.code) html += codeblockHTML(sec.code);
+    html += '</div>';
+  });
+  html += '<div class="cmd-card"><h4>مرجع سریع دستورهای این فصل</h4><div class="cmd-grid">';
+  ch.cmds.forEach(c=>{
+    html += '<div class="cmd-row"><code>' + esc(c.c) + '</code><span class="cmd-d">' + c.d + '</span>' +
+      '<button class="cmd-run" data-cmd="' + esc(c.c).replace(/"/g,'&quot;') + '">▶ اجرا در ترمینال</button></div>';
+  });
+  html += '</div></div>';
+  if(ch.tip) html += '<div class="callout tip"><b>💡 نکته حرفه‌ای</b>' + ch.tip + '</div>';
+  if(ch.warn) html += '<div class="callout warn"><b>⚠️ هشدار مهم</b>' + ch.warn + '</div>';
+  html += '<div id="tasks-card-host">' + tasksHTML(ch) + '</div>';
+  html += '<div class="ch-nav">' +
+    (i > 0 ? '<button class="btn btn-ghost" id="ch-prev">→ فصل قبلی: ' + CHAPTERS[i-1].title.slice(0, 22) + '</button>' : '<span></span>') +
+    (i < CHAPTERS.length - 1
+      ? '<button class="btn btn-primary" id="ch-next">فصل بعد: ' + CHAPTERS[i+1].title.slice(0, 22) + ' ←</button>'
+      : '<button class="btn btn-primary" id="ch-exam">🎯 رفتن به آزمون نهایی ←</button>') +
+    '</div>';
+  cv.innerHTML = html;
+  bindTasks(cv);
+  cv.querySelectorAll('.cmd-run').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      setDrawer(true);
+      termInput.value = b.dataset.cmd;
+      setTimeout(()=>{ termInput.focus(); }, 350);
+    });
+  });
+  const prev = cv.querySelector('#ch-prev');
+  if(prev) prev.addEventListener('click', ()=>{ showChapter(i - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  const next = cv.querySelector('#ch-next');
+  if(next) next.addEventListener('click', ()=>{ showChapter(i + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  const ex = cv.querySelector('#ch-exam');
+  if(ex) ex.addEventListener('click', ()=> switchView('exam'));
+  renderSidebar();
+}
+
+/* ---------- Reset ---------- */
+$('btn-reset').addEventListener('click', ()=>{
+  openModal('<h3>↺ بازنشانی پیشرفت</h3><p class="m-sub">همه تیک‌های تمرین‌ها و نتیجه آزمون پاک می‌شوند. مطمئنید؟</p>' +
+    '<div class="m-actions"><button class="btn btn-ghost btn-sm" id="rst-no">انصراف</button>' +
+    '<button class="btn btn-danger btn-sm" id="rst-yes">بله، پاک کن</button></div>');
+  $('rst-no').addEventListener('click', closeModal);
+  $('rst-yes').addEventListener('click', ()=>{
+    try { localStorage.removeItem('lta_done'); localStorage.removeItem('lta_xdone'); localStorage.removeItem('lta_result'); } catch(e){}
+    closeModal(); location.reload();
+  });
+});
+
+/* ---------- nano ---------- */
+function openNano(path){
+  const node = vfs.getNode(path);
+  const content = node && node.t === 'f' ? node.c : '';
+  openModal('<h3>📝 ویرایشگر nano</h3>' +
+    '<div id="nano-file">' + esc(path) + (node ? '' : '  <span class="t-dim">[New File]</span>') + '</div>' +
+    '<textarea id="nano-area" spellcheck="false">' + esc(content) + '</textarea>' +
+    '<div class="m-hint">در nano واقعی: <kbd>Ctrl+O</kbd> ذخیره · <kbd>Ctrl+X</kbd> خروج — اینجا با دکمه‌ها کار کنید. پس از ذخیره، فایل با cat قابل مشاهده است.</div>' +
+    '<div class="m-actions"><button class="btn btn-ghost btn-sm" id="nano-cancel">انصراف</button>' +
+    '<button class="btn btn-primary btn-sm" id="nano-save">💾 ذخیره و خروج</button></div>');
+  const ta = $('nano-area');
+  ta.focus();
+  $('nano-cancel').addEventListener('click', ()=>{ closeModal(); printPromptEcho('nano ' + path); tText('^X — بدون ذخیره خارج شدید', 't-dim'); termScroll(); });
+  $('nano-save').addEventListener('click', ()=>{
+    const r = vfs.writeFile(path, ta.value, false, false);
+    const n = vfs.getNode(path);
+    if(n) n.ed = true;
+    closeModal();
+    printPromptEcho('nano ' + path);
+    if(r.err) tText(r.err, 't-err');
+    else tText('[ Wrote ' + (ta.value.split('\n').length) + ' lines — ذخیره شد ✔ ]', 't-ok');
+    termScroll();
+    afterCommand();
+  });
+}
+
+/* ---------- Name modal (first visit) ---------- */
+function askName(){
+  openModal('<h3>👋 خوش آمدید به آکادمی ترمینال!</h3>' +
+    '<p class="m-sub">نام کاربری شما در ترمینال شبیه‌سازی‌شده استفاده می‌شود (مثلا برای whoami و Prompt). هر کارمند می‌تواند با نام خودش تمرین کند.</p>' +
+    '<input class="m-input" id="name-input" placeholder="مثلا: ali, sara, mr_rezaei" maxlength="16">' +
+    '<div class="m-hint">فقط حروف انگلیسی، عدد و خط تیره — اگر خالی بگذارید student در نظر گرفته می‌شود.</div>' +
+    '<div class="m-actions"><button class="btn btn-ghost btn-sm" id="name-skip">فعلا بعدا</button>' +
+    '<button class="btn btn-primary btn-sm" id="name-go">🚀 شروع یادگیری</button></div>');
+  const inp = $('name-input');
+  inp.focus();
+  const apply = ()=>{
+    let name = inp.value.trim().replace(/[^\w\-]/g, '').toLowerCase();
+    if(!name) name = 'student';
+    S.user = name; S.home = '/home/' + name;
+    try { localStorage.setItem('lta_name', name); } catch(e){}
+    vfs.buildDefault();
+    termOut.innerHTML = '';
+    welcomeBanner();
+    closeModal();
+    toast('👋 سلام ' + name + '! آماده تمرین هستی — prompt ترمینال با نام تو ساخته شد.');
+  };
+  $('name-go').addEventListener('click', apply);
+  $('name-skip').addEventListener('click', ()=>{ try { localStorage.setItem('lta_name', 'student'); } catch(e){} closeModal(); });
+  inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') apply(); });
+}
+
+/* ---------- Hero typing animation ---------- */
+(function heroTerm(){
+  const el = $('hero-term');
+  const script = [
+    { cmd: 'whoami', out: [['student', 't-ok']] },
+    { cmd: 'ls', out: [['documents  downloads  pictures  projects  welcome.txt', '']] },
+    { cmd: 'cat welcome.txt | grep Linux', out: [['Linux is a family of open-source operating systems.', ''], ['...and you will master the Linux command line.', '']] },
+    { cmd: 'echo "Learning Linux terminal!"', out: [['Learning Linux terminal!', 't-ok']] },
+    { cmd: 'sudo apt install skills', out: [['Reading package lists... Done', 't-dim'], ['Setting up skills (1.0.0) ... 100% ✔', 't-ok']] }
+  ];
+  let li = 0, ci = 0, outIdx = 0, phase = 'cmd';
+  function step(){
+    const line = script[li];
+    if(phase === 'cmd'){
+      if(ci === 0){
+        const rows = el.querySelectorAll('.tl');
+        if(rows.length > 10) rows[0].remove();
+        const d = document.createElement('div');
+        d.className = 'tl';
+        d.innerHTML = '<span class="p-user">student</span><span class="p-at">@</span><span class="p-host">academy</span><span class="p-sep">:</span><span class="p-path">~</span><span class="p-end">$</span>&nbsp;<span class="cmd-t"></span><span class="tcaret"></span>';
+        el.appendChild(d);
+      }
+      const t = el.lastElementChild.querySelector('.cmd-t');
+      t.textContent = line.cmd.slice(0, ++ci);
+      if(ci >= line.cmd.length){ phase = 'out'; outIdx = 0; setTimeout(step, 420); return; }
+      setTimeout(step, 34 + Math.random() * 46);
+    } else if(phase === 'out'){
+      if(outIdx < line.out.length){
+        const d = document.createElement('div');
+        d.className = 'tl ' + line.out[outIdx][1];
+        d.textContent = line.out[outIdx][0];
+        el.appendChild(d);
+        outIdx++;
+        setTimeout(step, 240);
+      } else {
+        const c = el.querySelector('.tcaret'); if(c) c.remove();
+        li = (li + 1) % script.length; ci = 0; phase = 'cmd';
+        setTimeout(step, 900);
+      }
+    }
+  }
+  step();
+})();
+
+/* ---------- Stats ---------- */
+$('stat-ch').textContent = CHAPTERS.length;
+$('stat-cmd').textContent = CMDS_ORDER.filter(c=>!GATED[c] || S.installed.has(c)).length + '+';
+$('stat-task').textContent = ALL_TASKS.length;
+$('stat-exam').textContent = EXAM_Q.length + EXAM_PRACTICAL.length;
+/* ============================================================
+   آزمون نهایی — منطق
+   ============================================================ */
+let examTimerInt = null;
+
+function lastResult(){
+  try { return JSON.parse(localStorage.getItem('lta_result') || 'null'); } catch(e){ return null; }
+}
+function renderExam(){
+  const root = $('exam-root');
+  if(S.exam.active){ renderExamRunning(root); return; }
+  const lr = lastResult();
+  root.innerHTML =
+    '<div class="exam-intro">' +
+    '<div class="big-ic">🎯</div>' +
+    '<h2>آزمون نهایی ترمینال لینوکس</h2>' +
+    '<p style="color:var(--mut);font-size:14.5px">جمع‌بندی هر ۱۳ فصل — هم تئوری، هم عمل!</p>' +
+    '<div class="exam-rules">' +
+    '<div class="rule"><b>📝 ' + EXAM_Q.length + ' سوال چهارگزینه‌ای</b><span>مفاهیم کلیدی همه فصل‌ها</span></div>' +
+    '<div class="rule"><b>⌨️ ' + EXAM_PRACTICAL.length + ' تمرین عملی در ترمینال</b><span>همان ترمینال تمرین، به‌صورت خودکار تصحیح می‌شود</span></div>' +
+    '<div class="rule"><b>⏱️ ' + (EXAM_CONFIG.timeSec / 60) + ' دقیقه زمان</b><span>تایمر از لحظه شروع فعال می‌شود</span></div>' +
+    '<div class="rule"><b>✅ حد نصاب قبولی ' + EXAM_CONFIG.passPercent + '%</b><span>هر سوال تئوری ' + EXAM_CONFIG.mcqPoint + ' نمره، هر تمرین عملی ' + EXAM_CONFIG.practicalPoint + ' نمره</span></div>' +
+    '</div>' +
+    (lr ? '<div class="chip" style="margin-bottom:16px">📊 آخرین نتیجه شما: <b>&nbsp;' + lr.score + ' از ' + lr.total + '&nbsp;(' + lr.pct + '%)</b> — ' + lr.grade + '</div>' : '') +
+    '<p style="color:var(--mut);font-size:13px;margin-bottom:18px">💡 پیشنهاد: اول فصل‌ها را تمام کنید، بعد سراغ آزمون بیایید. ترمینال تمرین در پایین همین صفحه در دسترس است.</p>' +
+    '<button class="btn btn-primary" id="exam-start">🚀 شروع آزمون</button>' +
+    '</div>';
+  $('exam-start').addEventListener('click', startExam);
+}
+function startExam(){
+  S.exam = { active: true, answers: {}, start: Date.now(), submitted: false };
+  S.xdone = new Set();
+  saveProgress();
+  renderExamRunning($('exam-root'));
+  toast('🎯 آزمون شروع شد! ' + (EXAM_CONFIG.timeSec / 60) + ' دقیقه فرصت دارید. موفق باشید!');
+}
+function renderExamRunning(root){
+  clearInterval(examTimerInt);
+  const answered = Object.keys(S.exam.answers).length;
+  root.innerHTML =
+    '<div class="exam-head">' +
+    '<h3>🎯 آزمون نهایی — در حال اجرا</h3>' +
+    '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+    '<span class="chip">پاسخ‌های تئوری: <b>&nbsp;<span id="exam-answered">' + answered + '</span>/' + EXAM_Q.length + '</b></span>' +
+    '<span class="chip">تمرین عملی: <b>&nbsp;<span id="exam-prac">' + EXAM_PRACTICAL.filter(p=>S.xdone.has(p.id)).length + '</span>/' + EXAM_PRACTICAL.length + '</b></span>' +
+    '<span id="exam-timer">' + fmtTimer(EXAM_CONFIG.timeSec) + '</span>' +
+    '</div></div>' +
+    '<div class="exam-grid">' +
+    '<div class="exam-col"><h4>📝 بخش اول — سوالات تئوری <span class="cnt">' + EXAM_Q.length + ' سوال</span></h4><div id="mcq-list"></div></div>' +
+    '<div class="exam-col"><h4>⌨️ بخش دوم — تمرین عملی در ترمینال <span class="cnt">' + EXAM_PRACTICAL.length + ' تمرین</span></h4>' +
+    '<div class="callout tip" style="margin:0 0 14px"><b>⌨️ نحوه انجام</b>تمرین‌ها را در «ترمینال تمرین» (پایین صفحه یا منوی ترمینال) انجام دهید. به‌محض درست انجام شدن، تیک می‌خورند.</div>' +
+    '<div id="prac-list"></div></div>' +
+    '</div>' +
+    '<div class="exam-submit-bar"><button class="btn btn-primary" id="exam-submit" style="font-size:16px;padding:14px 40px">🏁 پایان آزمون و محاسبه نتیجه</button></div>';
+  renderMcqList();
+  renderPracList();
+  $('exam-submit').addEventListener('click', confirmSubmit);
+  const left = EXAM_CONFIG.timeSec - Math.floor((Date.now() - S.exam.start) / 1000);
+  examTimerInt = setInterval(()=>{
+    const l = EXAM_CONFIG.timeSec - Math.floor((Date.now() - S.exam.start) / 1000);
+    const t = $('exam-timer');
+    if(!t){ clearInterval(examTimerInt); return; }
+    t.textContent = fmtTimer(Math.max(0, l));
+    if(l <= 300) t.classList.add('low');
+    if(l <= 0){ clearInterval(examTimerInt); submitExam(true); }
+  }, 1000);
+  void left;
+}
+function fmtTimer(s){
+  const m = Math.floor(s / 60), r = s % 60;
+  return pad(m, 2) + ':' + pad(r, 2);
+}
+function renderMcqList(){
+  const host = $('mcq-list');
+  const done = S.exam.submitted;
+  let html = '';
+  EXAM_Q.forEach((q, qi)=>{
+    html += '<div class="q-card"><div><span class="q-num">' + (qi + 1) + '</span><span class="q-text">' + q.q + '</span></div><div class="q-opts">';
+    q.o.forEach((opt, oi)=>{
+      let cls = 'q-opt';
+      const sel = S.exam.answers[qi] === oi;
+      if(!done && sel) cls += ' sel';
+      if(done){
+        if(oi === q.a) cls += ' correct';
+        else if(sel) cls += ' wrong';
+      }
+      html += '<button class="' + cls + '" data-q="' + qi + '" data-o="' + oi + '">' + esc(opt) + '</button>';
+    });
+    html += '</div>';
+    if(done) html += '<div class="q-why" style="display:block"><b>💡 توضیح:</b> ' + q.e + '</div>';
+    html += '</div>';
+  });
+  host.innerHTML = html;
+  if(!done){
+    host.querySelectorAll('.q-opt').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        S.exam.answers[b.dataset.q] = +b.dataset.o;
+        const card = b.closest('.q-card');
+        card.querySelectorAll('.q-opt').forEach(x=>x.classList.remove('sel'));
+        b.classList.add('sel');
+        $('exam-answered').textContent = Object.keys(S.exam.answers).length;
+      });
+    });
+  }
+}
+function renderPracList(){
+  const host = $('prac-list');
+  let html = '';
+  EXAM_PRACTICAL.forEach((p, pi)=>{
+    const done = S.xdone.has(p.id);
+    html += '<div class="x-item' + (done ? ' done' : '') + '"><span class="num">' + (done ? '✓' : (pi + 1)) + '</span><p>' + p.t + (done ? ' <span class="t-ok" style="font-weight:700">— انجام شد ✔ (+' + EXAM_CONFIG.practicalPoint + ' نمره)</span>' : '') + '</p></div>';
+  });
+  host.innerHTML = html;
+  const cnt = $('exam-prac');
+  if(cnt) cnt.textContent = EXAM_PRACTICAL.filter(p=>S.xdone.has(p.id)).length;
+}
+function examPracticalCheck(){
+  let changed = false;
+  for(const p of EXAM_PRACTICAL){
+    if(S.xdone.has(p.id)) continue;
+    let ok = false;
+    try { ok = !!p.chk(TCTX); } catch(e){}
+    if(ok){ S.xdone.add(p.id); changed = true; toast('🎯 تمرین آزمون انجام شد: ' + p.t.slice(0, 60) + '…'); }
+  }
+  if(changed){ saveProgress(); renderPracList(); }
+}
+function confirmSubmit(){
+  const answered = Object.keys(S.exam.answers).length;
+  openModal('<h3>🏁 پایان آزمون؟</h3>' +
+    '<p class="m-sub">شما به ' + answered + ' از ' + EXAM_Q.length + ' سوال تئوری پاسخ داده‌اید و ' +
+    EXAM_PRACTICAL.filter(p=>S.xdone.has(p.id)).length + ' از ' + EXAM_PRACTICAL.length + ' تمرین عملی انجام شده است.' +
+    (answered < EXAM_Q.length ? ' سوالات بی‌پاسخ نمره نمی‌گیرند!' : ' عالی!') + '</p>' +
+    '<div class="m-actions"><button class="btn btn-ghost btn-sm" id="sub-no">ادامه می‌دهم</button>' +
+    '<button class="btn btn-primary btn-sm" id="sub-yes">بله، نتیجه را نشان بده</button></div>');
+  $('sub-no').addEventListener('click', closeModal);
+  $('sub-yes').addEventListener('click', ()=>{ closeModal(); submitExam(false); });
+}
+function gradeOf(pct){
+  if(pct >= 90) return { g: 'A — فوق‌العاده! 🏆', t: 'تسلط کامل! شما یک ترمینال‌باز حرفه‌ای هستید.' };
+  if(pct >= 70) return { g: 'B — قبول ✔', t: 'آفرین! تسلط خوبی دارید؛ نقاط ضعف را مرور کنید.' };
+  if(pct >= 50) return { g: 'C — قابل قبول', t: 'پایه‌ها درست است؛ فصل‌های ضعیف‌تر را دوباره تمرین کنید.' };
+  return { g: 'D — نیاز به تلاش مجدد', t: 'نگران نباشید! دوباره فصل‌ها را با تمرین‌ها مرور کنید و بیایید.' };
+}
+function submitExam(auto){
+  if(S.exam.submitted) return;
+  S.exam.submitted = true;
+  S.exam.active = false;
+  clearInterval(examTimerInt);
+  let score = 0, wrong = [];
+  EXAM_Q.forEach((q, qi)=>{
+    if(S.exam.answers[qi] === q.a) score += EXAM_CONFIG.mcqPoint;
+    else wrong.push({ n: qi + 1, q: q.q, your: S.exam.answers[qi] != null ? q.o[S.exam.answers[qi]] : 'بی‌پاسخ', ok: q.o[q.a], e: q.e });
+  });
+  const pracDone = EXAM_PRACTICAL.filter(p=>S.xdone.has(p.id)).length;
+  score += pracDone * EXAM_CONFIG.practicalPoint;
+  const total = EXAM_Q.length * EXAM_CONFIG.mcqPoint + EXAM_PRACTICAL.length * EXAM_CONFIG.practicalPoint;
+  const pct = Math.round(score / total * 100);
+  const gr = gradeOf(pct);
+  const result = { score, total, pct, grade: gr.g, date: Date.now() };
+  try { localStorage.setItem('lta_result', JSON.stringify(result)); } catch(e){}
+  renderMcqList();
+  renderExam($('exam-root'));
+  setTimeout(()=>{
+    openModal('<h3>📊 نتیجه آزمون شما</h3>' +
+      '<div class="ring-wrap"><div class="ring" style="background:conic-gradient(' + (pct >= 70 ? 'var(--grn)' : pct >= 50 ? 'var(--amb)' : 'var(--red)') + ' ' + (pct * 3.6) + 'deg, rgba(148,163,184,.12) 0)">' +
+      '<div><b>' + pct + '%</b><br><small>' + score + ' از ' + total + '</small></div></div>' +
+      '<div class="r-grade">' + gr.g + '</div><div style="color:var(--mut);font-size:13px">' + gr.t + '</div></div>' +
+      '<div class="r-break">' +
+      '<div class="r-cell"><b>' + (score - pracDone * EXAM_CONFIG.practicalPoint) + '/' + (EXAM_Q.length * EXAM_CONFIG.mcqPoint) + '</b><span>سوالات تئوری</span></div>' +
+      '<div class="r-cell"><b>' + (pracDone * EXAM_CONFIG.practicalPoint) + '/' + (EXAM_PRACTICAL.length * EXAM_CONFIG.practicalPoint) + '</b><span>تمرین عملی ترمینال</span></div>' +
+      '</div>' +
+      (wrong.length ? '<div class="r-review"><h4>🔍 مرور پاسخ‌های نادرست (' + wrong.length + ' مورد)</h4>' +
+        wrong.slice(0, 6).map(w=>'<div class="rv-item"><div class="qq">' + w.n + '. ' + w.q + '</div>' +
+        '<div class="aa">پاسخ شما: ' + esc(w.your) + ' · <b>پاسخ درست: ' + esc(w.ok) + '</b></div>' +
+        '<div class="aa" style="margin-top:4px">' + w.e + '</div></div>').join('') + '</div>' : '<div class="r-review" style="color:var(--grn);font-weight:700;text-align:center">✨ بدون حتی یک اشتباه در بخش تئوری! فوق‌العاده بود.</div>') +
+      '<div class="m-actions"><button class="btn btn-ghost btn-sm" id="res-course">📚 مرور فصل‌ها</button>' +
+      '<button class="btn btn-primary btn-sm" id="res-retry">🔄 آزمون مجدد</button></div>');
+    if(pct >= EXAM_CONFIG.passPercent) confettiBurst();
+    $('res-course').addEventListener('click', ()=>{ closeModal(); switchView('course'); showChapter(0); });
+    $('res-retry').addEventListener('click', ()=>{ closeModal(); renderExam(); });
+  }, 350);
+}
+
+/* ---------- Confetti ---------- */
+function confettiBurst(){
+  const cv = $('confetti');
+  const ctx = cv.getContext('2d');
+  cv.width = innerWidth; cv.height = innerHeight;
+  const colors = ['#2dd4a7', '#38bdf8', '#a78bfa', '#fbbf24', '#fb7185', '#4ade80'];
+  const parts = [];
+  for(let i = 0; i < 160; i++){
+    parts.push({
+      x: Math.random() * cv.width,
+      y: -20 - Math.random() * cv.height * 0.5,
+      w: 6 + Math.random() * 8,
+      h: 8 + Math.random() * 10,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      vy: 2.2 + Math.random() * 3.4,
+      vx: (Math.random() - 0.5) * 2.4,
+      r: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.24
+    });
+  }
+  let frames = 0;
+  (function anim(){
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts.forEach(p=>{
+      p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frames++;
+    if(frames < 240) requestAnimationFrame(anim);
+    else ctx.clearRect(0, 0, cv.width, cv.height);
+  })();
+}
+
+/* ============================================================
+   راه‌اندازی اولیه
+   ============================================================ */
+(function init(){
+  let name = 'student';
+  try { name = localStorage.getItem('lta_name') || 'student'; } catch(e){}
+  S.user = name;
+  S.home = '/home/' + name;
+  vfs.buildDefault();
+  loadProgress();
+  welcomeBanner();
+  updatePrompt();
+  renderSidebar();
+  showChapter(0);
+  updateProgress();
+  renderExam();
+  if(name === 'student' && !localStorage.getItem('lta_name')) setTimeout(askName, 900);
+})();
+</script>
+</body>
+</html>
